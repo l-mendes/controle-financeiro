@@ -1,0 +1,72 @@
+###############################################################################
+#                          Generated on phpdocker.io                          #
+###############################################################################
+version: '3.1'
+services:
+    redis:
+        image: 'redis:alpine'
+        container_name: 'controle-financeiro-redis'
+        volumes:
+            - controle-financeiro-redis:/data
+        networks:
+            - controle-financeiro
+
+    mariadb:
+        image: 'mariadb:10.6'
+        container_name: 'controle-financeiro-mariadb'
+        working_dir: /application
+        volumes:
+            - '.:/application'
+            - controle-financeiro-mariadb:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=roopass
+            - MYSQL_DATABASE=db_controle_financeiro
+            - MYSQL_USER=user
+            - MYSQL_PASSWORD=pass
+        ports:
+            - '24003:3306'
+        networks:
+            - controle-financeiro
+
+    webserver:
+        image: 'nginx:alpine'
+        container_name: 'controle-financeiro-webserver'
+        working_dir: /application
+        volumes:
+            - '.:/application'
+            - './docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf'
+        ports:
+            - '24000:80'
+        networks:
+            - controle-financeiro
+        depends_on:
+          - php-fpm
+
+    php-fpm:
+        build:
+            context: docker/php-fpm
+            args:
+                WWWGROUP: ${GID:-1000}
+                WWWUSER: ${UID:-1000}
+        container_name: 'controle-financeiro-php-fpm'
+        working_dir: /application
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        volumes:
+            - '.:/application'
+            - './docker/php-fpm/php-ini-overrides.ini:/etc/php/8.2/fpm/conf.d/99-overrides.ini'
+        networks:
+            - controle-financeiro
+        depends_on:
+            - mariadb
+            - redis
+
+networks:
+    controle-financeiro:
+        driver: bridge
+
+volumes:
+    controle-financeiro-mariadb:
+        driver: local
+    controle-financeiro-redis:
+        driver: local
