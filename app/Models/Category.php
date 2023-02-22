@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Enums\CategoryType;
+use App\Traits\MultiTenancyTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Category extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, MultiTenancyTrait;
 
     /**
      * The attributes that aren't mass assignable.
