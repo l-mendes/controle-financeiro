@@ -44,6 +44,6 @@ class User extends Authenticatable
 
     public function categories()
     {
-        return $this->hasMany(Category::class);
+        return $this->hasMany(Category::class)->whereNull('category_id');
     }
 }

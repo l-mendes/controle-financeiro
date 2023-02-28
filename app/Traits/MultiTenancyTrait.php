@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait MultiTenancyTrait
 {
-    public function bootMultiTenancyTrait()
+    public static function bootMultiTenancyTrait()
     {
         if (!app()->runningInConsole() && auth()->check()) {
             static::creating(function ($model) {

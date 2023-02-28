@@ -211,36 +211,4 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default Categories
-    |--------------------------------------------------------------------------
-    |
-    | Este array contém as categorias padrões do sistema
-    |
-    */
-    'categories' => [
-        [
-            'name'  =>  'Lazer',
-            'type'  =>  'O',
-            'color' =>  '#008ae6',
-        ],
-        [
-            'name'  =>  'Despesas',
-            'type'  =>  'O',
-            'color' =>  '#ff3333',
-        ],
-        [
-            'name'  =>  'Transporte',
-            'type'  =>  'O',
-            'color' =>  '#558000',
-        ],
-        [
-            'name'  =>  'Salário',
-            'type'  =>  'I',
-            'color' =>  '#009900',
-        ]
-    ]
-
 ];

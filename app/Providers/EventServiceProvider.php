@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Listeners\UserRegistered;
 use App\Models\User;
 use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Registered;
@@ -19,6 +20,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+            UserRegistered::class
         ],
     ];
 
@@ -28,9 +30,7 @@ class EventServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $observers = [
-        User::class => [UserObserver::class],
-    ];
+    protected $observers = [];
 
     /**
      * Register any events for your application.

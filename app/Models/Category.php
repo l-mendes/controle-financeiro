@@ -27,4 +27,9 @@ class Category extends Model
     protected $casts = [
         'type' => CategoryType::class,
     ];
+
+    public function subCategories()
+    {
+        return $this->hasMany(Category::class, 'category_id', 'id');
+    }
 }
