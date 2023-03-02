@@ -19,7 +19,7 @@
 </head>
 
 <body class="font-sans antialiased">
-    <div class="flex flex-1 h-screen w-screen bg-gray-50">
+    <div class="flex flex-1 h-screen w-screen bg-[#EDF3FB]">
         @include('layouts.navigation')
 
         <div class="w-full">
@@ -37,7 +37,6 @@
                 {{ $slot }}
             </main>
         </div>
-
     </div>
 </body>
 
