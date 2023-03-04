@@ -19,7 +19,7 @@
 </head>
 
 <body class="font-sans antialiased">
-    <div class="flex flex-1 h-screen w-screen bg-[#EDF3FB]">
+    <div class="flex-col md:flex-row flex flex-1 h-screen w-screen bg-[#eaf1fa] gap-[1px]">
         @include('layouts.navigation')
 
         <div class="w-full">
