@@ -7,9 +7,15 @@ module.exports = {
     './storage/framework/views/*.php',
     './resources/views/**/*.blade.php',
   ],
-
+  safelist: [
+    'text-[#00ff00]',
+    'text-[#ff5050]',
+  ],
   theme: {
     extend: {
+      colors: {
+        primary: '#6515DD'
+      },
       fontFamily: {
         sans: ['Figtree', ...defaultTheme.fontFamily.sans],
       },

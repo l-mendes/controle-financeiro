@@ -24,4 +24,12 @@ enum CategoryType: string
             self::OUTBOUND => 'Saída'
         };
     }
+
+    public function getTextColor(): string
+    {
+        return match ($this) {
+            self::INBOUND => '#00ff00',
+            self::OUTBOUND => '#ff5050'
+        };
+    }
 }
