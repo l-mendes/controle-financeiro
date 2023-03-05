@@ -14,7 +14,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#6515DD'
+        primary: {
+          light: '#a673f2',
+          DEFAULT: '#6515DD',
+          dark: '#400d8c',
+        },
       },
       fontFamily: {
         sans: ['Figtree', ...defaultTheme.fontFamily.sans],
