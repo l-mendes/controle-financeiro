@@ -24,6 +24,6 @@ return [
     [
         'label' => 'Categorias',
         'icon' => 'fa-solid fa-tags',
-        'route' => 'categories'
+        'route' => 'categories.index'
     ],
 ];

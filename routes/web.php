@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -34,9 +35,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         return view('dashboard');
     })->name('outbound');
 
-    Route::get('/categories', function () {
-        return view('dashboard');
-    })->name('categories');
+    Route::resource('categories', CategoryController::class);
 });
 Route::get('/dashboard', function () {
     return view('dashboard');
