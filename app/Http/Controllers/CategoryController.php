@@ -39,9 +39,11 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Category $category): Response
+    public function show(Category $category): View
     {
-        //
+        $subCategories = Category::subCategory()->ofCategory($category->id)->paginate();
+
+        return view('categories.show', ['category' => $category, 'subCategories' => $subCategories]);
     }
 
     /**

@@ -38,4 +38,14 @@ class Category extends Model
     {
         return $query->whereNull('category_id');
     }
+
+    public function scopeSubCategory(Builder $query): Builder
+    {
+        return $query->whereNotNull('category_id');
+    }
+
+    public function scopeOfCategory(Builder $query, int $categoryId): Builder
+    {
+        return $query->where('category_id', $categoryId);
+    }
 }
