@@ -22,7 +22,7 @@
     <div class="flex-col md:flex-row flex flex-1 h-screen w-screen bg-[#eaf1fa] gap-[1px]">
         @include('layouts.navigation')
 
-        <div class="w-full">
+        <div class="w-full overflow-auto">
             <!-- Page Heading -->
             @if (isset($header))
             <header class="bg-white shadow">

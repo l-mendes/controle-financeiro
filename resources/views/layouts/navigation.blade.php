@@ -21,10 +21,11 @@
 </nav>
 
 <div class="md:hidden relative" x-data="{ open: false }">
-    <div class="md:hidden flex w-full bg-[#6515DD] px-4 shadow h-[60px] text-white">
+    <div class="md:hidden flex w-full bg-primary px-4 shadow h-[60px] text-white">
         <button @click="open = true" type="button" class="px-2 rounded self-center focus:outline-none focus:ring-2 focus:ring-[#c4a2f6]">
             <i class="fa-solid fa-bars text-2xl"></i>
         </button>
+        <h1 class="self-center ml-3 text-xl font-semibold">Controle Financeiro</h1>
     </div>
     <nav x-show="open" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90" class="top-0 absolute z-50 h-screen w-screen bg-white overflow-y-auto text-gray-600 py-3 px-4 shadow">
         <div class="flex flex-col h-full">
