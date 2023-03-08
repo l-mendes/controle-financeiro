@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id')->nullable()->constrained();
             $table->string('name');
-            $table->enum('type', ['I', 'O']);
+            $table->enum('type', ['I', 'O'])->nullable();
             $table->string('color');
             $table->foreignId('user_id')->onDelete('cascade');
             $table->timestamps();
