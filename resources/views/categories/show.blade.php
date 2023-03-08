@@ -60,32 +60,33 @@
 
     @include('categories.partials.add-sub-category')
 
-    <x-tables.table>
-        <x-slot name="thead">
-            <x-tables.th>Sub-categoria</x-tables.th>
-            <x-tables.th>Cor</x-tables.th>
-            <x-tables.th />
-        </x-slot>
+    <div x-data="{ name: '', color: '#000000' }">
+        <x-tables.table>
+            <x-slot name="thead">
+                <x-tables.th>Sub-categoria</x-tables.th>
+                <x-tables.th>Cor</x-tables.th>
+                <x-tables.th />
+            </x-slot>
 
-        <x-slot name="tbody">
-            @foreach ($subCategories as $subCategory)
-                <x-tables.tr>
-                    <x-tables.td>
-                        {{ $subCategory->name }}
-                    </x-tables.td>
-                    <x-tables.td>
-                        <div class="w-5 h-5 rounded-full" style="background: {{ $subCategory->color }}" />
-                    </x-tables.td>
-                    <x-tables.td>
-                        {{-- <a href="{{ route('categories.edit', $subCategory->id) }}"> --}}
-                        <i class="fa-solid fa-pen-to-square"></i>
-                        {{-- </a> --}}
-                    </x-tables.td>
-                </x-tables.tr>
-            @endforeach
-        </x-slot>
-    </x-tables.table>
+            <x-slot name="tbody">
+                @foreach ($subCategories as $subCategory)
+                    <x-tables.tr>
+                        <x-tables.td>
+                            {{ $subCategory->name }}
+                        </x-tables.td>
+                        <x-tables.td>
+                            <div class="w-5 h-5 rounded-full" style="background: {{ $subCategory->color }}" />
+                        </x-tables.td>
+                        <x-tables.td>
+                            @include('categories.partials.edit-sub-category', ['subCategory' => $subCategory])
+                        </x-tables.td>
+                    </x-tables.tr>
+                @endforeach
+            </x-slot>
+        </x-tables.table>
+
+        {{ $subCategories->onEachSide(1)->links() }}
+
+
     </div>
-
-    {{ $subCategories->onEachSide(1)->links() }}
 </x-app-layout>

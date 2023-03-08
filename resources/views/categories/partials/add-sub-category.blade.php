@@ -4,7 +4,7 @@
         SUB-CATEGORIA
     </x-button>
 
-    <x-modal name="add-sub-category" :show="$errors->subCategory->isNotEmpty()" focusable title="Add Sub-categoria">
+    <x-modal name="add-sub-category" :show="$errors->subCategory->isNotEmpty()" focusable title="Adicionar sub-categoria">
         <form method="post" action="{{ route('categories.sub-categories.store', $category->id) }}" class="p-6">
             @csrf
             <div>
@@ -21,7 +21,7 @@
 
                 <x-forms.text-input id="sub-category-color" name="sub-category-color"
                     class="cursor-pointer w-[30px] h-[30px] sm:w-[40px] sm:h-[40px] outline-none" type="color"
-                    required value="{{ old('sub-category-color') }}" />
+                    required value="{{ old('sub-category-color', '#000000') }}" />
 
                 <x-forms.input-error :messages="$errors->subCategory->get('sub-category-color')" class="mt-2" />
             </div>
