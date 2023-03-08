@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SubCategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,6 +37,12 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     })->name('outbound');
 
     Route::resource('categories', CategoryController::class)->except(['edit']);
+
+    Route::group(['prefix' => 'categories'], function () {
+        Route::post('{category}/sub-categories/store', [SubCategoryController::class, 'store'])->name('categories.sub-categories.store');
+        Route::put('{category}/sub-categories/{subCategory}', [SubCategoryController::class, 'update'])->name('categories.sub-categories.update');
+        Route::delete('{category}/sub-categories/{subCategory}', [SubCategoryController::class, 'destroy'])->name('categories.sub-categories.destroy');
+    });
 });
 Route::get('/dashboard', function () {
     return view('dashboard');

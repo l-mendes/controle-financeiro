@@ -17,7 +17,7 @@
             @method('PUT')
             @csrf
             <div>
-                <x-forms.input-label for="name" :value="'Categoria'" />
+                <x-forms.input-label for="name" value="Categoria" />
 
                 <x-forms.text-input id="name" class="block mt-1 w-full sm:w-[50%]" type="text" name="name"
                     required value="{{ old('name', $category->name) }}" />
@@ -26,7 +26,7 @@
             </div>
 
             <div>
-                <x-forms.input-label for="color" :value="'Cor'" />
+                <x-forms.input-label for="color" value="Cor" />
 
                 <x-forms.text-input id="color"
                     class="cursor-pointer w-[30px] h-[30px] sm:w-[40px] sm:h-[40px] outline-none" type="color"
@@ -58,11 +58,8 @@
         </form>
     </x-card>
 
-    <div class="mb-2">
-        <x-button icon="fa-solid fa-plus">
-            SUB-CATEGORIA
-        </x-button>
-    </div>
+    @include('categories.partials.add-sub-category')
+
     <x-tables.table>
         <x-slot name="thead">
             <x-tables.th>Sub-categoria</x-tables.th>

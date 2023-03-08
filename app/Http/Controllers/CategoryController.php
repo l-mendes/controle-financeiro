@@ -56,6 +56,7 @@ class CategoryController extends Controller
             'name' => [
                 'required',
                 Rule::unique('categories')
+                    ->whereNull('category_id')
                     ->whereNot('id', $category->id)
                     ->where('user_id', $category->user_id),
                 'max:255',
