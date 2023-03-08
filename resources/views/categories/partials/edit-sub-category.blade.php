@@ -4,7 +4,7 @@
 </a>
 
 <x-modal name="edit-sub-category-{{$subCategory->id}}" :show="$errors->editSubCategory->isNotEmpty()" focusable title="Editar sub-categoria">
-    <form method="post" action="{{ route('categories.sub-categories.store', $category->id) }}" class="p-6">
+    <form method="post" action="{{ route('categories.sub-categories.update', [$category->id, $subCategory->id]) }}" class="p-6">
         @csrf
         <div>
             <x-forms.input-label for="edit-sub-category-name-{{$subCategory->id}}" value="Categoria" />
