@@ -6,6 +6,7 @@ use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class CategoryController extends Controller
@@ -47,19 +48,33 @@ class CategoryController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Category $category): Response
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Category $category): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'name' => [
+                'required',
+                Rule::unique('categories')
+                    ->whereNot('id', $category->id)
+                    ->where('user_id', $category->user_id),
+                'max:255',
+            ],
+            'type' => [
+                'required',
+                'in:I,O'
+            ],
+            'color' => [
+                'required',
+                'regex:/^#([a-f0-9]{6}|[a-f0-9]{3})$/i'
+            ]
+        ]);
+
+        $category->fill($validated);
+
+        $category->save();
+
+        return redirect()->back()->with('success', 'Categoria atualizada com sucesso!');
     }
 
     /**

@@ -10,6 +10,13 @@ module.exports = {
   safelist: [
     'text-[#00ff00]',
     'text-[#ff5050]',
+    {
+      pattern: /ring-(red|green|primary)-(100|200|300)/,
+      variants: ['hover', 'focus'],
+    },
+    {
+      pattern: /text-(xs|sm|md|lg|xl|2xl)/,
+    },
   ],
   theme: {
     extend: {

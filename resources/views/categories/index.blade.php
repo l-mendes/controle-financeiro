@@ -10,7 +10,6 @@
                 <x-tables.th class="text-center">Sub-categorias</x-tables.th>
                 <x-tables.th>Tipo</x-tables.th>
                 <x-tables.th>Cor</x-tables.th>
-                <x-tables.th />
             </x-slot>
 
             <x-slot name="tbody">
@@ -33,11 +32,6 @@
                         </x-tables.td>
                         <x-tables.td>
                             <div class="w-5 h-5 rounded-full" style="background: {{ $category->color }}" />
-                        </x-tables.td>
-                        <x-tables.td>
-                            <a href="{{ route('categories.edit', $category->id) }}">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </a>
                         </x-tables.td>
                     </x-tables.tr>
                 @endforeach

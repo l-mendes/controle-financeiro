@@ -7,68 +7,87 @@
         </x-slot>
         Categorias - {{ $category->name }}
     </x-header>
-    <div class="mb-4 flex flex-col gap-6">
-
-        <div class="bg-white overflow-hidden shadow rounded-lg p-6 flex flex-col gap-6">
-            <h1 class="text-gray-400 font-semibold">Detalhes</h1>
+    @if (session('success'))
+        <x-alerts.alert-success>
+            {{ session('success') }}
+        </x-alerts.alert-success>
+    @endif
+    <x-card class="mb-5">
+        <form action="{{ route('categories.update', $category->id) }}" method="POST" class="flex flex-col gap-4">
+            @method('PUT')
+            @csrf
             <div>
-                <div class="text-gray-500">
-                    <span>Categoria:</span>
-                </div>
+                <x-forms.input-label for="name" :value="'Categoria'" />
 
-                <div class="text-gray-500 font-semibold text-xl">
-                    <span>{{ $category->name }}</span>
-                </div>
+                <x-forms.text-input id="name" class="block mt-1 w-full sm:w-[50%]" type="text" name="name"
+                    required value="{{ old('name', $category->name) }}" />
+
+                <x-forms.input-error :messages="$errors->get('name')" class="mt-2" />
             </div>
 
             <div>
-                <div class="text-gray-500">
-                    <span>Tipo:</span>
-                </div>
+                <x-forms.input-label for="color" :value="'Cor'" />
 
-                <div class="text-xl">
-                    <span class="text-[{{ $category->type->getTextColor() }}]">
-                        {{ $category->type->getLabelText() }}
-                    </span>
-                </div>
+                <x-forms.text-input id="color"
+                    class="cursor-pointer w-[30px] h-[30px] sm:w-[40px] sm:h-[40px] outline-none" type="color"
+                    name="color" required value="{{ old('color', $category->color) }}" />
+
+                <x-forms.input-error :messages="$errors->get('color')" class="mt-2" />
             </div>
 
             <div>
-                <div class="text-gray-500">
-                    <span>Cor:</span>
-                </div>
+                <x-forms.input-label for="type" :value="'Tipo'" />
 
-                <div class="text-gray-600 font-semibold text-xl">
-                    <div class="w-5 h-5 rounded-full" style="background: {{ $category->color }}"></div>
-                </div>
+                <x-forms.select id="type" name="type" class="block mt-1 w-full sm:w-[50%]">
+                    @foreach ($categoryTypes as $type)
+                        <option {{ old('type', $category->type->value) == $type->value ? 'selected' : '' }}
+                            value="{{ $type->value }}">
+                            {{ $type->getLabelText() }}
+                        </option>
+                    @endforeach
+                </x-forms.select>
+
+                <x-forms.input-error :messages="$errors->get('type')" class="mt-2" />
             </div>
-        </div>
 
-        <x-tables.table>
-            <x-slot name="thead">
-                <x-tables.th>Subcategoria</x-tables.th>
-                <x-tables.th>Cor</x-tables.th>
-                <x-tables.th />
-            </x-slot>
+            <div class="mt-2">
+                <x-button type="submit">
+                    SALVAR
+                </x-button>
+            </div>
+        </form>
+    </x-card>
 
-            <x-slot name="tbody">
-                @foreach ($subCategories as $subCategory)
-                    <x-tables.tr>
-                        <x-tables.td>
-                            {{ $subCategory->name }}
-                        </x-tables.td>
-                        <x-tables.td>
-                            <div class="w-5 h-5 rounded-full" style="background: {{ $subCategory->color }}" />
-                        </x-tables.td>
-                        <x-tables.td>
-                            <a href="{{ route('categories.edit', $subCategory->id) }}">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </a>
-                        </x-tables.td>
-                    </x-tables.tr>
-                @endforeach
-            </x-slot>
-        </x-tables.table>
+    <div class="mb-2">
+        <x-button icon="fa-solid fa-plus">
+            SUB-CATEGORIA
+        </x-button>
+    </div>
+    <x-tables.table>
+        <x-slot name="thead">
+            <x-tables.th>Sub-categoria</x-tables.th>
+            <x-tables.th>Cor</x-tables.th>
+            <x-tables.th />
+        </x-slot>
+
+        <x-slot name="tbody">
+            @foreach ($subCategories as $subCategory)
+                <x-tables.tr>
+                    <x-tables.td>
+                        {{ $subCategory->name }}
+                    </x-tables.td>
+                    <x-tables.td>
+                        <div class="w-5 h-5 rounded-full" style="background: {{ $subCategory->color }}" />
+                    </x-tables.td>
+                    <x-tables.td>
+                        {{-- <a href="{{ route('categories.edit', $subCategory->id) }}"> --}}
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        {{-- </a> --}}
+                    </x-tables.td>
+                </x-tables.tr>
+            @endforeach
+        </x-slot>
+    </x-tables.table>
     </div>
 
     {{ $subCategories->onEachSide(1)->links() }}
