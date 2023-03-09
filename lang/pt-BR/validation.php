@@ -215,10 +215,12 @@ return [
         'category' => 'categoria',
         'blood_type' => 'tipo sanguíneo',
         'birth_date' => 'data de nascimento',
-        'sub-category-name' => 'nome',
+        'sub-category-name' => 'categoria',
         'sub-category-color' => 'cor',
         'color' => 'cor',
-        'type' => 'tipo'
+        'type' => 'tipo',
+        'edit-sub-category-name' => 'categoria',
+        'edit-sub-category-color' => 'cor',
     ],
 
 ];
