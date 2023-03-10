@@ -7,11 +7,13 @@
         </x-slot>
         Categorias - {{ $category->name }}
     </x-header>
+
     @if (session('success'))
         <x-alerts.alert-success>
             {{ session('success') }}
         </x-alerts.alert-success>
     @endif
+
     <x-card class="mb-5">
         <form action="{{ route('categories.update', $category->id) }}" method="POST" class="flex flex-col gap-4">
             @method('PUT')
@@ -58,35 +60,6 @@
         </form>
     </x-card>
 
-    @include('categories.partials.add-sub-category')
+    @livewire('categories.list-sub-categories', ['category' => $category])
 
-    <div x-data="{ name: '', color: '#000000' }">
-        <x-tables.table>
-            <x-slot name="thead">
-                <x-tables.th>Sub-categoria</x-tables.th>
-                <x-tables.th>Cor</x-tables.th>
-                <x-tables.th />
-            </x-slot>
-
-            <x-slot name="tbody">
-                @foreach ($subCategories as $subCategory)
-                    <x-tables.tr>
-                        <x-tables.td>
-                            {{ $subCategory->name }}
-                        </x-tables.td>
-                        <x-tables.td>
-                            <div class="w-5 h-5 rounded-full" style="background: {{ $subCategory->color }}" />
-                        </x-tables.td>
-                        <x-tables.td>
-                            @include('categories.partials.edit-sub-category', ['subCategory' => $subCategory])
-                        </x-tables.td>
-                    </x-tables.tr>
-                @endforeach
-            </x-slot>
-        </x-tables.table>
-
-        {{ $subCategories->onEachSide(1)->links() }}
-
-
-    </div>
 </x-app-layout>

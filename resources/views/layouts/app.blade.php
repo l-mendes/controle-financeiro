@@ -15,7 +15,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/scss/app.scss', 'resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- Livewire -->
+    @livewireStyles
 </head>
 
 <body class="font-sans antialiased">
@@ -38,6 +41,18 @@
             </main>
         </div>
     </div>
+
+    @livewireScripts
+
+    <script>
+        window.addEventListener('alert', event => {
+            window.toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+            };
+            window.toastr[event.detail.type](event.detail.message, event.detail.title ?? '')
+        });
+    </script>
 </body>
 
 </html>
