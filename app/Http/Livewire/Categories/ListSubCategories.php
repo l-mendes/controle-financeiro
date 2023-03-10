@@ -46,19 +46,25 @@ class ListSubCategories extends Component
 
         $this->isEditMode = false;
 
-        $this->subCategory = new Category();
+        $this->subCategory = new Category(['color' => '#cccccc']);
 
         $this->dispatchBrowserEvent('open-modal', 'edit-sub-category');
     }
 
-    public function createSubCategory()
+    public function createSubCategory(): void
     {
-        $this->validate();
+        $data = $this->validate();
 
         $this->isEditMode = false;
+
+        $this->category->subCategories()->create($data['subCategory']);
+
+        $this->dispatchBrowserEvent('close-modal', 'edit-sub-category');
+
+        $this->dispatchBrowserEvent('alert', ['type' => 'success', 'message' => 'Sub-categoria criada com sucesso!']);
     }
 
-    public function updateSubCategory()
+    public function updateSubCategory(): void
     {
         $data = $this->validate();
 
