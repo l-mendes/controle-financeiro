@@ -4,26 +4,31 @@ return [
     [
         'label' => 'Dashboard',
         'icon' => 'fa-solid fa-gauge',
-        'route' => 'dashboard'
+        'route' => 'dashboard',
+        'is_active' => 'dashboard*'
     ],
     [
         'label' => 'Transações',
         'icon' => 'fa-solid fa-arrow-right-arrow-left',
-        'route' => 'transactions'
+        'route' => 'transactions',
+        'is_active' => 'transactions*'
     ],
     [
         'label' => 'Entradas',
         'icon' => 'fa-regular fa-circle-up',
-        'route' => 'inbound'
+        'route' => 'inbound',
+        'is_active' => 'inbound*'
     ],
     [
         'label' => 'Saídas',
         'icon' => 'fa-regular fa-circle-down',
-        'route' => 'outbound'
+        'route' => 'outbound',
+        'is_active' => 'outbound*'
     ],
     [
         'label' => 'Categorias',
         'icon' => 'fa-solid fa-tags',
-        'route' => 'categories.index'
+        'route' => 'categories.index',
+        'is_active' => 'categories.*'
     ],
 ];

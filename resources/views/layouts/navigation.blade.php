@@ -10,7 +10,7 @@
 
         <div class="mt-5 flex flex-col gap-1">
             @foreach(config('menu') as $menu)
-            <x-nav-link :href="route($menu['route'])" :active="request()->routeIs($menu['route'])" :label="$menu['label']" :icon="$menu['icon']" />
+            <x-nav-link :href="route($menu['route'])" :active="request()->routeIs($menu['is_active'])" :label="$menu['label']" :icon="$menu['icon']" />
             @endforeach
         </div>
 
@@ -40,7 +40,7 @@
 
             <div class="mt-5 flex flex-col gap-1">
                 @foreach(config('menu') as $menu)
-                <x-nav-link :href="route($menu['route'])" :active="request()->routeIs($menu['route'])" :label="$menu['label']" :icon="$menu['icon']" />
+                <x-nav-link :href="route($menu['route'])" :active="request()->routeIs($menu['is_active'])" :label="$menu['label']" :icon="$menu['icon']" />
                 @endforeach
             </div>
 
