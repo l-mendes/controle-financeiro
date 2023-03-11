@@ -35,7 +35,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         return view('dashboard');
     })->name('outbound');
 
-    Route::resource('categories', CategoryController::class)->except(['edit']);
+    Route::resource('categories', CategoryController::class)->only(['index', 'show', 'update']);
 });
 Route::get('/dashboard', function () {
     return view('dashboard');

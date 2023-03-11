@@ -55,8 +55,6 @@ class ListSubCategories extends Component
     {
         $data = $this->validate();
 
-        $this->isEditMode = false;
-
         $this->category->subCategories()->create($data['subCategory']);
 
         $this->dispatchBrowserEvent('close-modal', 'edit-sub-category');
