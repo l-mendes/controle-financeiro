@@ -22,9 +22,12 @@
                     <x-tables.td>
                         <div class="w-5 h-5 rounded-full" style="background: {{ $subCategory->color }}" />
                     </x-tables.td>
-                    <x-tables.td>
-                        <a class="cursor-pointer" wire:click.prevent="openEditModal({{$subCategory}})">
+                    <x-tables.td class="text-lg">
+                        <a class="cursor-pointer mr-4 text-blue-500" wire:click.prevent="openEditModal({{$subCategory}})">
                             <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
+                        <a class="cursor-pointer text-red-500" wire:click.prevent="openDeleteModal({{$subCategory}})">
+                            <i class="fa-solid fa-xmark"></i>
                         </a>
                     </x-tables.td>
                 </x-tables.tr>
@@ -66,5 +69,23 @@
                 </x-button>
             </div>
         </form>
+    </x-modal>
+
+    <x-modal name="delete-sub-category" focusable title="Remover sub-categoria">
+        <div class="p-6 flex gap-5 flex-col">
+            <div>
+                <h3 class="text-gray-600 font-medium">Deseja realmente excluir a sub-categoria?</h3>
+            </div>
+
+            <div class="text-center">
+                <x-button color="secondary" x-on:click="$dispatch('close')">
+                    Cancelar
+                </x-button>
+
+                <x-button wire:click.prevent="deleteSubCategory">
+                    Confirmar
+                </x-button>
+            </div>
+        </div>
     </x-modal>
 </div>

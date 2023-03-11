@@ -77,6 +77,24 @@ class ListSubCategories extends Component
         $this->dispatchBrowserEvent('alert', ['type' => 'success', 'message' => 'Sub-categoria atualizada com sucesso!']);
     }
 
+    public function openDeleteModal(Category $subCategory): void
+    {
+        $this->subCategory = $subCategory;
+
+        $this->dispatchBrowserEvent('open-modal', 'delete-sub-category');
+    }
+
+    public function deleteSubCategory()
+    {
+        if ($this->subCategory) {
+            $this->subCategory->delete();
+
+            $this->dispatchBrowserEvent('close-modal', 'delete-sub-category');
+
+            $this->dispatchBrowserEvent('alert', ['type' => 'success', 'message' => 'Sub-categoria excluída com sucesso!']);
+        }
+    }
+
     protected function rules(): array
     {
         if ($this->isEditMode) {
@@ -86,8 +104,9 @@ class ListSubCategories extends Component
                     Rule::unique('categories', 'name')
                         ->whereNotNull('category_id')
                         ->where('category_id', $this->category->id)
-                        ->where('user_id', $this->subCategory->user_id)
-                        ->whereNot('id', $this->subCategory->id),
+                        ->where('user_id', auth()->id())
+                        ->whereNot('id', $this->subCategory->id)
+                        ->whereNull('deleted_at'),
                     'max:255',
                 ],
                 'subCategory.color' => [
@@ -103,7 +122,8 @@ class ListSubCategories extends Component
                 Rule::unique('categories', 'name')
                     ->whereNotNull('category_id')
                     ->where('category_id', $this->category->id)
-                    ->where('user_id', auth()->id()),
+                    ->where('user_id', auth()->id())
+                    ->whereNull('deleted_at'),
                 'max:255',
             ],
             'subCategory.color' => [

@@ -56,7 +56,8 @@ class CategoryController extends Controller
                 Rule::unique('categories')
                     ->whereNull('category_id')
                     ->whereNot('id', $category->id)
-                    ->where('user_id', $category->user_id),
+                    ->where('user_id', $category->user_id)
+                    ->whereNull('deleted_at'),
                 'max:255',
             ],
             'type' => [

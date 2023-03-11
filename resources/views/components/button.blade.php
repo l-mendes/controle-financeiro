@@ -3,7 +3,7 @@
 @php
     $bgColor = 'primary';
     $textColor = 'text-white';
-    
+
     switch ($color) {
         case 'success':
             $bgColor = 'green-500';
@@ -11,6 +11,9 @@
         case 'error':
             $bgColor = 'red-500';
             break;
+        case 'secondary':
+            $bgColor = 'gray-50';
+            $textColor = 'text-gray-600';
     }
 @endphp
 
