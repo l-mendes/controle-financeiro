@@ -54,7 +54,7 @@
             <div>
                 <x-forms.input-label for="name" value="Categoria" />
 
-                <x-forms.text-input id="name" class="block mt-1 w-3/4" type="text"
+                <x-forms.text-input id="name" class="block mt-1 w-full sm:w-3/4" type="text"
                     name="name" required wire:model.defer="category.name" />
 
                 @error('category.name')
@@ -77,7 +77,7 @@
             <div class="mt-6">
                 <x-forms.input-label for="type" :value="'Tipo'" />
 
-                <x-forms.select id="type" name="type" class="block mt-1 w-3/4" wire:model.defer="category.type" required>
+                <x-forms.select id="type" name="type" class="block mt-1 w-full sm:w-3/4" wire:model.defer="category.type" required>
                     @foreach ($categoryTypes as $type)
                         <option value="{{ $type->value }}">
                             {{ $type->getLabelText() }}

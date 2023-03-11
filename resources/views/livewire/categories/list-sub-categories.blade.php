@@ -44,7 +44,7 @@
             <div>
                 <x-forms.input-label for="edit-sub-category-name" value="Categoria" />
 
-                <x-forms.text-input id="edit-sub-category-name" class="block mt-1 w-3/4" type="text"
+                <x-forms.text-input id="edit-sub-category-name" class="block mt-1 w-full sm:w-3/4" type="text"
                     name="edit-sub-category-name" required wire:model.defer="subCategory.name" />
 
                 @error('subCategory.name')
