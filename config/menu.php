@@ -10,8 +10,8 @@ return [
     [
         'label' => 'Transações',
         'icon' => 'fa-solid fa-arrow-right-arrow-left',
-        'route' => 'transactions',
-        'is_active' => 'transactions*'
+        'route' => 'transactions.index',
+        'is_active' => 'transactions.*'
     ],
     [
         'label' => 'Entradas',
