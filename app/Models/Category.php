@@ -20,7 +20,7 @@ class Category extends Model
      *
      * @var array
      */
-    protected $guarded = ['user_id'];
+    protected $guarded = ['created_at', 'updated_at'];
 
     /**
      * The attributes that should be cast.
