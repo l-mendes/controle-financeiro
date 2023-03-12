@@ -32,9 +32,9 @@ class Transaction extends Model
         'amount' => Money::class
     ];
 
-    public function category(): BelongsTo
+    public function subCategory(): BelongsTo
     {
-        return $this->belongsTo(Category::class)->subCategory()->withTrashed();
+        return $this->belongsTo(Category::class, 'category_id')->subCategory()->withTrashed();
     }
 
     public function scopeDone(Builder $builder): Builder
