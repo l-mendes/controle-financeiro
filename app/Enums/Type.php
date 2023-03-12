@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum CategoryType: string
+enum Type: string
 {
     case INBOUND = 'I';
     case OUTBOUND = 'O';

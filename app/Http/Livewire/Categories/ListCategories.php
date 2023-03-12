@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Categories;
 
-use App\Enums\CategoryType;
+use App\Enums\Type;
 use App\Models\Category;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -61,7 +61,7 @@ class ListCategories extends Component
 
     protected function rules(): array
     {
-        $types = implode(',', array_column(CategoryType::cases(), 'value'));
+        $types = implode(',', array_column(Type::cases(), 'value'));
 
         return [
             'category.name' => [

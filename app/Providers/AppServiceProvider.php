@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Enums\CategoryType;
+use App\Enums\Type;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -24,6 +24,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::share('categoryTypes', CategoryType::cases());
+        View::share('types', Type::cases());
     }
 }

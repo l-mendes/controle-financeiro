@@ -41,7 +41,7 @@
                 <x-forms.input-label for="type" :value="'Tipo'" />
 
                 <x-forms.select id="type" name="type" class="block mt-1 w-full sm:w-[50%]">
-                    @foreach ($categoryTypes as $type)
+                    @foreach ($types as $type)
                         <option {{ old('type', $category->type->value) == $type->value ? 'selected' : '' }}
                             value="{{ $type->value }}">
                             {{ $type->getLabelText() }}

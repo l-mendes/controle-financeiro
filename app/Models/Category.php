@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
-use App\Enums\CategoryType;
+use App\Enums\Type;
 use App\Traits\MultiTenancyTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Category extends Model
@@ -26,12 +28,17 @@ class Category extends Model
      * @var array
      */
     protected $casts = [
-        'type' => CategoryType::class,
+        'type' => Type::class,
     ];
 
-    public function subCategories()
+    public function subCategories(): HasMany
     {
         return $this->hasMany(Category::class, 'category_id', 'id');
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 
     public function scopeMainCategory(Builder $query): Builder

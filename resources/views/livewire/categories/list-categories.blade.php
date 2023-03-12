@@ -78,7 +78,7 @@
                 <x-forms.input-label for="type" :value="'Tipo'" />
 
                 <x-forms.select id="type" name="type" class="block mt-1 w-full sm:w-3/4" wire:model.defer="category.type" required>
-                    @foreach ($categoryTypes as $type)
+                    @foreach ($types as $type)
                         <option value="{{ $type->value }}">
                             {{ $type->getLabelText() }}
                         </option>
