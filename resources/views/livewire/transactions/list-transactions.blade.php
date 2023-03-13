@@ -72,7 +72,7 @@
                 <x-forms.input-label for="type" :value="'Tipo'" />
 
                 <x-forms.select id="type" name="type" class="block mt-1 w-full sm:w-3/4"
-                    wire:model.defer="transaction.type" wire:change="updateCategoryList" required>
+                    wire:model="transaction.type" required>
                     @foreach ($types as $type)
                         <option value="{{ $type->value }}">
                             {{ $type->getLabelText() }}
@@ -89,7 +89,7 @@
                 <x-forms.input-label for="category" :value="'Categoria'" />
 
                 <x-forms.select id="category" name="category" class="block mt-1 w-full sm:w-3/4"
-                    wire:model.defer="categoryId" wire:change="updateSubCategoryList" required>
+                    wire:model="categoryId" required>
                     <option value="0">
                         Selecione uma opção
                     </option>

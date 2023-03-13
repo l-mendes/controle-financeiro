@@ -29,7 +29,7 @@ class ListTransactions extends Component
 
     public function mount()
     {
-        $this->transaction = new Transaction(['amount' => 0]);
+        $this->transaction = new Transaction(['type' => Type::INBOUND, 'amount' => 0]);
 
         $this->inboundCategories = Category::mainCategory()
             ->with('subCategories')
@@ -57,35 +57,38 @@ class ListTransactions extends Component
     {
         $this->resetErrorBag();
 
-        $this->transaction = new Transaction(['amount' => 0]);
+        $this->transaction = new Transaction(['type' => Type::INBOUND, 'amount' => 0]);
 
         $this->dispatchBrowserEvent('open-modal', 'add-transaction');
     }
 
-    public function updateCategoryList(): void
+    public function updatedTransactionType($value): void
     {
-        if ($this->transaction->type) {
-            switch ($this->transaction->type) {
-                case Type::INBOUND:
+        if ($value) {
+            switch ($value) {
+                case Type::INBOUND->value:
                     $this->categories = $this->inboundCategories;
                     break;
-                case Type::OUTBOUND:
+                case Type::OUTBOUND->value:
                     $this->categories = $this->outboundCategories;
                     break;
             }
         } else {
             $this->categories = new Collection([]);
         }
+
+        $this->transaction->category_id = '';
     }
 
-    public function updateSubCategoryList(): void
+    public function updatedCategoryId($value): void
     {
-        if ($this->categoryId) {
-            $this->subCategories = Category::subCategory()->ofCategory($this->categoryId)->get();
-            $this->transaction->category_id = '';
+        if ($value) {
+            $this->subCategories = Category::subCategory()->ofCategory($value)->get();
         } else {
             $this->subCategories = new Collection([]);
         }
+
+        $this->transaction->category_id = '';
     }
 
     public function create(): void
