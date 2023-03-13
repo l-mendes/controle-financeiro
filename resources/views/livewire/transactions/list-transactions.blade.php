@@ -72,10 +72,7 @@
                 <x-forms.input-label for="type" :value="'Tipo'" />
 
                 <x-forms.select id="type" name="type" class="block mt-1 w-full sm:w-3/4"
-                    wire:model.defer="transaction.type" required>
-                    <option value="">
-                        Selecione uma opção
-                    </option>
+                    wire:model.defer="transaction.type" wire:change="updateCategoryList" required>
                     @foreach ($types as $type)
                         <option value="{{ $type->value }}">
                             {{ $type->getLabelText() }}
@@ -92,10 +89,15 @@
                 <x-forms.input-label for="category" :value="'Categoria'" />
 
                 <x-forms.select id="category" name="category" class="block mt-1 w-full sm:w-3/4"
-                    wire:model.defer="category" required>
-                    <option value="">
+                    wire:model.defer="categoryId" wire:change="updateSubCategoryList" required>
+                    <option value="0">
                         Selecione uma opção
                     </option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}">
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
                 </x-forms.select>
 
                 @error('category')
@@ -111,6 +113,11 @@
                     <option value="">
                         Selecione uma opção
                     </option>
+                    @foreach ($subCategories as $subCategory)
+                        <option value="{{ $subCategory->id }}">
+                            {{ $subCategory->name }}
+                        </option>
+                    @endforeach
                 </x-forms.select>
 
                 @error('transaction.category_id')

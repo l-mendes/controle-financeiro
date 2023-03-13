@@ -17,11 +17,34 @@ class ListTransactions extends Component
 
     public Collection $categories;
 
-    public Category $category;
-
     public Collection $subCategories;
 
+    public int $categoryId;
+
+    public Collection $inboundCategories;
+
+    public Collection $outboundCategories;
+
     public bool $isEditMode = false;
+
+    public function mount()
+    {
+        $this->transaction = new Transaction(['amount' => 0]);
+
+        $this->inboundCategories = Category::mainCategory()
+            ->with('subCategories')
+            ->where('type', Type::INBOUND)
+            ->get();
+
+        $this->outboundCategories = Category::mainCategory()
+            ->with('subCategories')
+            ->where('type', Type::OUTBOUND)
+            ->get();
+
+        $this->categories = $this->inboundCategories;
+
+        $this->subCategories = new Collection([]);
+    }
 
     public function render(): View
     {
@@ -37,6 +60,32 @@ class ListTransactions extends Component
         $this->transaction = new Transaction(['amount' => 0]);
 
         $this->dispatchBrowserEvent('open-modal', 'add-transaction');
+    }
+
+    public function updateCategoryList(): void
+    {
+        if ($this->transaction->type) {
+            switch ($this->transaction->type) {
+                case Type::INBOUND:
+                    $this->categories = $this->inboundCategories;
+                    break;
+                case Type::OUTBOUND:
+                    $this->categories = $this->outboundCategories;
+                    break;
+            }
+        } else {
+            $this->categories = new Collection([]);
+        }
+    }
+
+    public function updateSubCategoryList(): void
+    {
+        if ($this->categoryId) {
+            $this->subCategories = Category::subCategory()->ofCategory($this->categoryId)->get();
+            $this->transaction->category_id = '';
+        } else {
+            $this->subCategories = new Collection([]);
+        }
     }
 
     public function create(): void
