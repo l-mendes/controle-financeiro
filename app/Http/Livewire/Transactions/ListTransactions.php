@@ -34,7 +34,7 @@ class ListTransactions extends Component
     {
         $this->resetErrorBag();
 
-        $this->transaction = new Transaction();
+        $this->transaction = new Transaction(['amount' => 0]);
 
         $this->dispatchBrowserEvent('open-modal', 'add-transaction');
     }
@@ -47,9 +47,9 @@ class ListTransactions extends Component
     protected function rules(): array
     {
         return [
-            'name' => 'required|max:255',
-            'type' => ['required', new ValidTypeRule],
-            'category_id' => [
+            'transaction.name' => 'required|max:255',
+            'transaction.type' => ['required', new ValidTypeRule],
+            'transaction.category_id' => [
                 'required',
                 Rule::exists('categories', 'id')
                     ->whereNotNull('category_id')
@@ -57,9 +57,9 @@ class ListTransactions extends Component
                     ->where('type', $this->transaction->type)
                     ->whereNull('deleted_at')
             ],
-            'amount' => 'required|integer|min:1',
-            'performed_at' => 'required|date_format:Y-m-d H:i:s',
-            'done' => 'required|boolean',
+            'transaction.amount' => 'required|integer|min:1',
+            'transaction.performed_at' => 'required|date_format:Y-m-d H:i:s',
+            'transaction.done' => 'required|boolean',
         ];
     }
 }

@@ -25,7 +25,7 @@ class BladeServiceProvider extends ServiceProvider
         });
 
         Blade::directive('money', function (string $expression) {
-            return "<?php echo ($expression)->formatTo(config('app.locale')) ?>";
+            return "<?php echo \Brick\Money\Money::ofMinor(($expression), 'BRL')->formatTo(config('app.locale')) ?>";
         });
     }
 }

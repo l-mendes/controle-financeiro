@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Casts\Money;
 use App\Enums\Type;
 use App\Traits\MultiTenancyTrait;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,7 +28,6 @@ class Transaction extends Model
     protected $casts = [
         'type' => Type::class,
         'performed_at' => 'datetime',
-        'amount' => Money::class
     ];
 
     public function subCategory(): BelongsTo

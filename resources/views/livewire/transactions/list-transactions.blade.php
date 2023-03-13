@@ -121,8 +121,23 @@
             <div class="mt-6">
                 <x-forms.input-label for="amount" value="Valor" />
 
-                <x-forms.text-input id="amount" class="block mt-1 w-full sm:w-3/4" type="number" name="amount"
-                    required wire:model.defer="transaction.amount" />
+                <div x-data="" x-init="window.Inputmask('currency', {
+                    radixPoint: ',',
+                    prefix: 'R$ ',
+                    numericInput: true,
+                    rightAlign: false,
+                    autoUnmask: true,
+                    onBeforeMask: function(value, opts) {
+                        if (null === value) {
+                            value = '0.00'
+                        }
+                        return value;
+                    }
+                }).mask($refs.input);">
+                    <x-forms.text-input x-ref="input" x-on:change="$dispatch('input', $refs.input.value)"
+                        wire:model.defer="transaction.amount" id="amount" class="block mt-1 w-full sm:w-3/4"
+                        type="text" name="amount" onfocus="this.select();" />
+                </div>
 
                 @error('transaction.amount')
                     <x-forms.input-error :messages="$message" class="mt-2" />
