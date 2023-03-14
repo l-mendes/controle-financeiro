@@ -93,7 +93,7 @@ class ListTransactions extends Component
 
     public function create(): void
     {
-        sleep(100);
+        dd($this->transaction);
     }
 
     protected function rules(): array

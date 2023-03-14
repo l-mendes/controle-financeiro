@@ -29,7 +29,7 @@
                             {{ $transaction->subCategory->category->name }}
                         </x-tables.td>
                         <x-tables.td>
-                            @datetime($transaction->performed_at)
+                            {{ $transaction->performed_at }}
                         </x-tables.td>
                         <x-tables.td>
                             @money($transaction->amount)
@@ -154,7 +154,7 @@
             <div class="mt-6">
                 <x-forms.input-label for="performed_at" value="Data da transação" />
 
-                <x-forms.text-input id="performed_at" class="block mt-1 w-full sm:w-3/4" type="text"
+                <x-forms.datetime-input id="performed_at" class="block mt-1 w-full sm:w-3/4" type="text"
                     name="performed_at" required wire:model.defer="transaction.performed_at" />
 
                 @error('transaction.performed_at')
