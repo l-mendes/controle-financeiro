@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Transactions;
 use App\Enums\Type;
 use App\Models\Category;
 use App\Models\Transaction;
+use App\Models\User;
 use App\Rules\ValidTypeRule;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
@@ -13,7 +14,7 @@ use Livewire\Component;
 
 class ListTransactions extends Component
 {
-    public Transaction $transaction;
+    public array $transaction;
 
     public Collection $categories;
 
@@ -29,7 +30,7 @@ class ListTransactions extends Component
 
     public function mount()
     {
-        $this->transaction = new Transaction(['type' => Type::INBOUND, 'amount' => 0]);
+        $this->resetTransactionData();
 
         $this->inboundCategories = Category::mainCategory()
             ->with('subCategories')
@@ -41,7 +42,7 @@ class ListTransactions extends Component
             ->where('type', Type::OUTBOUND)
             ->get();
 
-        $this->categories = $this->inboundCategories;
+        $this->categories = new Collection([]);
 
         $this->subCategories = new Collection([]);
     }
@@ -57,7 +58,7 @@ class ListTransactions extends Component
     {
         $this->resetErrorBag();
 
-        $this->transaction = new Transaction(['type' => Type::INBOUND, 'amount' => 0]);
+        $this->resetTransactionData();
 
         $this->dispatchBrowserEvent('open-modal', 'add-transaction');
     }
@@ -77,7 +78,7 @@ class ListTransactions extends Component
             $this->categories = new Collection([]);
         }
 
-        $this->transaction->category_id = '';
+        $this->transaction['category_id'] = '';
     }
 
     public function updatedCategoryId($value): void
@@ -88,12 +89,27 @@ class ListTransactions extends Component
             $this->subCategories = new Collection([]);
         }
 
-        $this->transaction->category_id = '';
+        $this->transaction['category_id'] = '';
     }
 
     public function create(): void
     {
-        dd($this->transaction);
+        $data = $this->validate();
+
+        $data['amount'] = $data['amount'] * 100;
+
+        /**
+         * @var User $user
+         */
+        $user = auth()->user();
+
+        $user->transactions()->create($data);
+
+        $this->dispatchBrowserEvent('close-modal', 'add-transaction');
+
+        $this->dispatchBrowserEvent('alert', ['type' => 'success', 'message' => 'Transação criada com sucesso!']);
+
+        $this->reset();
     }
 
     protected function rules(): array
@@ -106,12 +122,24 @@ class ListTransactions extends Component
                 Rule::exists('categories', 'id')
                     ->whereNotNull('category_id')
                     ->where('user_id', auth()->id())
-                    ->where('type', $this->transaction->type)
+                    ->where('type', $this->transaction['type'])
                     ->whereNull('deleted_at')
             ],
-            'transaction.amount' => 'required|integer|min:1',
+            'transaction.amount' => 'required|decimal:0,2|min:1',
             'transaction.performed_at' => 'required|date_format:Y-m-d H:i:s',
             'transaction.done' => 'required|boolean',
+        ];
+    }
+
+    private function resetTransactionData()
+    {
+        $this->transaction = [
+            'name' => '',
+            'type' => '',
+            'category_id' => null,
+            'amount' => 0,
+            'performed_at' => now()->timezone(auth()->user()->timezone)->format('d/m/Y H:i'),
+            'done' => true,
         ];
     }
 }

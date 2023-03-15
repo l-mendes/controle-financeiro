@@ -69,10 +69,13 @@
             </div>
 
             <div class="mt-6">
-                <x-forms.input-label for="type" :value="'Tipo'" />
+                <x-forms.input-label for="type" value="Tipo" />
 
                 <x-forms.select id="type" name="type" class="block mt-1 w-full sm:w-3/4"
                     wire:model="transaction.type" required>
+                    <option value="">
+                        Selecione uma opção
+                    </option>
                     @foreach ($types as $type)
                         <option value="{{ $type->value }}">
                             {{ $type->getLabelText() }}
@@ -86,7 +89,7 @@
             </div>
 
             <div class="mt-6">
-                <x-forms.input-label for="category" :value="'Categoria'" />
+                <x-forms.input-label for="category" value="Categoria" />
 
                 <x-forms.select id="category" name="category" class="block mt-1 w-full sm:w-3/4"
                     wire:model="categoryId" required>
@@ -106,10 +109,10 @@
             </div>
 
             <div class="mt-6">
-                <x-forms.input-label for="category_id" :value="'Sub-categoria'" />
+                <x-forms.input-label for="category_id" value="Sub-categoria" />
 
                 <x-forms.select id="category_id" name="category_id" class="block mt-1 w-full sm:w-3/4"
-                    wire:model.defer="transaction.category_id" required>
+                    wire:model="transaction.category_id" required>
                     <option value="">
                         Selecione uma opção
                     </option>
@@ -128,23 +131,9 @@
             <div class="mt-6">
                 <x-forms.input-label for="amount" value="Valor" />
 
-                <div x-data="" x-init="window.Inputmask('currency', {
-                    radixPoint: ',',
-                    prefix: 'R$ ',
-                    numericInput: true,
-                    rightAlign: false,
-                    autoUnmask: true,
-                    onBeforeMask: function(value, opts) {
-                        if (null === value) {
-                            value = '0.00'
-                        }
-                        return value;
-                    }
-                }).mask($refs.input);">
-                    <x-forms.text-input x-ref="input" x-on:change="$dispatch('input', $refs.input.value)"
-                        wire:model.defer="transaction.amount" id="amount" class="block mt-1 w-full sm:w-3/4"
-                        type="text" name="amount" onfocus="this.select();" />
-                </div>
+
+                <x-forms.currency-input wire:model.lazy="transaction.amount" id="amount"
+                    class="block mt-1 w-full sm:w-3/4" type="text" name="amount" />
 
                 @error('transaction.amount')
                     <x-forms.input-error :messages="$message" class="mt-2" />
@@ -155,7 +144,7 @@
                 <x-forms.input-label for="performed_at" value="Data da transação" />
 
                 <x-forms.datetime-input id="performed_at" class="block mt-1 w-full sm:w-3/4" type="text"
-                    name="performed_at" required wire:model.defer="transaction.performed_at" />
+                    name="performed_at" required wire:model.lazy="transaction.performed_at" />
 
                 @error('transaction.performed_at')
                     <x-forms.input-error :messages="$message" class="mt-2" />
@@ -163,10 +152,9 @@
             </div>
 
             <div class="mt-6">
-                <x-forms.input-label for="done" value="Transação concluída?" />
 
-                <x-forms.text-input id="done" class="block mt-1 w-full sm:w-3/4" type="text" name="done"
-                    required wire:model.defer="transaction.done" />
+                <x-forms.checkbox-input id="done" name="done" wire:model="transaction.done"
+                    label="Transação concluída?" />
 
                 @error('transaction.done')
                     <x-forms.input-error :messages="$message" class="mt-2" />

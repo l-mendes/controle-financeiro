@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Enums\Type;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -25,5 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::share('types', Type::cases());
+
+        Carbon::setLocale(config('app.locale'));
     }
 }
