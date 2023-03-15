@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Rules\ValidTypeRule;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -50,7 +51,7 @@ class ListTransactions extends Component
     public function render(): View
     {
         return view('livewire.transactions.list-transactions', [
-            'transactions' => Transaction::with(['subCategory.category'])->done()->paginate()
+            'transactions' => Transaction::with(['subCategory.category'])->done()->orderByDesc('performed_at')->paginate()
         ]);
     }
 
@@ -92,24 +93,35 @@ class ListTransactions extends Component
         $this->transaction['category_id'] = '';
     }
 
+    public function updatedTransactionAmount($value): void
+    {
+        if ($value) {
+            $this->transaction['amount'] *= 100;
+        }
+    }
+
     public function create(): void
     {
         $data = $this->validate();
-
-        $data['amount'] = $data['amount'] * 100;
 
         /**
          * @var User $user
          */
         $user = auth()->user();
 
-        $user->transactions()->create($data);
+        $data['transaction']['performed_at'] = Carbon::createFromFormat(
+            'd/m/Y H:i',
+            $data['transaction']['performed_at'],
+            $user->timezone
+        )
+            ->setTimezone(config('app.timezone'))
+            ->format('Y-m-d H:i:s');
+
+        $user->transactions()->create($data['transaction']);
 
         $this->dispatchBrowserEvent('close-modal', 'add-transaction');
 
         $this->dispatchBrowserEvent('alert', ['type' => 'success', 'message' => 'Transação criada com sucesso!']);
-
-        $this->reset();
     }
 
     protected function rules(): array
@@ -122,11 +134,18 @@ class ListTransactions extends Component
                 Rule::exists('categories', 'id')
                     ->whereNotNull('category_id')
                     ->where('user_id', auth()->id())
+                    ->whereNull('deleted_at'),
+            ],
+            'categoryId' => [
+                'required',
+                Rule::exists('categories', 'id')
+                    ->whereNull('category_id')
+                    ->where('user_id', auth()->id())
                     ->where('type', $this->transaction['type'])
-                    ->whereNull('deleted_at')
+                    ->whereNull('deleted_at'),
             ],
             'transaction.amount' => 'required|decimal:0,2|min:1',
-            'transaction.performed_at' => 'required|date_format:Y-m-d H:i:s',
+            'transaction.performed_at' => 'required|date_format:d/m/Y H:i',
             'transaction.done' => 'required|boolean',
         ];
     }

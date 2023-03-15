@@ -126,13 +126,17 @@
                 @error('transaction.category_id')
                     <x-forms.input-error :messages="$message" class="mt-2" />
                 @enderror
+
+                @error('categoryId')
+                    <x-forms.input-error :messages="$message" class="mt-2" />
+                @enderror
             </div>
 
             <div class="mt-6">
                 <x-forms.input-label for="amount" value="Valor" />
 
 
-                <x-forms.currency-input wire:model.lazy="transaction.amount" id="amount"
+                <x-forms.currency-input wire:model.defer="transaction.amount" id="amount"
                     class="block mt-1 w-full sm:w-3/4" type="text" name="amount" />
 
                 @error('transaction.amount')

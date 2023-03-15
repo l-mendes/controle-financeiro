@@ -22,11 +22,13 @@ class BladeServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Blade::stringable(Carbon::class, function ($object) {
-            return $object->format('d/m/Y H:i');
+            return $object->timezone(auth()->user()?->timezone ?? config('app.timezone'))->format('d/m/Y H:i');
         });
 
         Blade::directive('datetime', function (string $expression) {
-            return "<?php echo \Illuminate\Support\Carbon::parse(($expression))->format('d/m/Y H:i'); ?>";
+            $timezone = auth()->user()?->timezone ?? config('app.timezone');
+
+            return "<?php echo \Illuminate\Support\Carbon::parse(($expression))->timezone($timezone)->format('d/m/Y H:i'); ?>";
         });
 
         Blade::directive('money', function (string $expression) {
