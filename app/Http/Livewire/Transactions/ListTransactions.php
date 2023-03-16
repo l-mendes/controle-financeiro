@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Rules\ValidTypeRule;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Livewire\Component;
@@ -29,8 +31,17 @@ class ListTransactions extends Component
 
     public bool $isEditMode = false;
 
+    public $startDate;
+
+    public $endDate;
+
     public function mount()
     {
+        $user = auth()->user();
+
+        $this->startDate = now()->timezone($user->timezone)->startOfMonth()->format('Y-m-d');
+        $this->endDate = now()->timezone($user->timezone)->format('Y-m-d');
+
         $this->resetTransactionData();
 
         $this->inboundCategories = Category::mainCategory()
@@ -50,9 +61,34 @@ class ListTransactions extends Component
 
     public function render(): View
     {
+        $timezone = auth()->user()->timezone;
+
         return view('livewire.transactions.list-transactions', [
-            'transactions' => Transaction::with(['subCategory.category'])->done()->orderByDesc('performed_at')->paginate()
+            'transactions' => Transaction::with(['subCategory.category'])
+                ->done()
+                ->whereBetween(
+                    DB::raw("DATE(CONVERT_TZ(performed_at, 'UTC', '$timezone'))"),
+                    [
+                        $this->startDate,
+                        $this->endDate
+                    ]
+                )
+                ->orderByDesc('performed_at')
+                ->paginate()
         ]);
+    }
+
+    public function applyFilter()
+    {
+        $validator = Validator::make([
+            'startDate' => $this->startDate,
+            'endDate' => $this->endDate
+        ], [
+            'startDate' => 'required|date|before:endDate',
+            'endDate' => 'required|date|after:startDate'
+        ]);
+
+        $validator->validate();
     }
 
     public function openAddModal(): void

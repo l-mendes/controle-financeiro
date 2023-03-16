@@ -1,5 +1,29 @@
 <div>
     <x-card title="Transações realizadas" icon="fa-solid fa-arrow-right-arrow-left">
+        <div class="shadow-lg rounded-lg mb-6 border-2 border-gray-200 p-4">
+            <h1>Período:</h1>
+
+            <div class="mt-1 w-full lg:w-3/4 flex gap-2 gap-y-3 sm:items-center flex-col sm:flex-row">
+                <x-forms.text-input wire:model.defer="startDate" id="startDate" type="date" name="startDate" required />
+
+                <span class="text-sm text-center">até</span>
+
+                <x-forms.text-input wire:model.defer="endDate" id="endDate" type="date" name="endDate" required />
+
+                <x-button icon="fa-solid fa-magnifying-glass" wire:click.prevent="applyFilter">
+                    Buscar
+                </x-button>
+            </div>
+
+            @error('startDate')
+                <x-forms.input-error :messages="$message" class="mt-2" />
+            @enderror
+
+            @error('endDate')
+                <x-forms.input-error :messages="$message" class="mt-2" />
+            @enderror
+        </div>
+
         <x-button icon="fa-solid fa-plus" wire:click.prevent="openAddModal" class="mb-2">
             TRANSAÇÃO
         </x-button>
@@ -7,7 +31,6 @@
         <x-tables.table>
             <x-slot name="thead">
                 <x-tables.th>Nome</x-tables.th>
-                <x-tables.th>Tipo</x-tables.th>
                 <x-tables.th>Categoria</x-tables.th>
                 <x-tables.th>Data</x-tables.th>
                 <x-tables.th>Valor</x-tables.th>
@@ -21,18 +44,19 @@
                             {{ $transaction->name }}
                         </x-tables.td>
                         <x-tables.td>
-                            <span class="text-[{{ $transaction->type->getTextColor() }}]">
-                                {{ $transaction->type->getLabelText() }}
-                            </span>
-                        </x-tables.td>
-                        <x-tables.td>
                             {{ $transaction->subCategory->category->name }}
                         </x-tables.td>
                         <x-tables.td>
                             {{ $transaction->performed_at }}
                         </x-tables.td>
                         <x-tables.td>
-                            @money($transaction->amount)
+                            <span class="text-[{{ $transaction->type->getTextColor() }}]">
+                                @if ($transaction->type->isInbound())
+                                    + @money($transaction->amount)
+                                @else
+                                    - @money($transaction->amount)
+                                @endif
+                            </span>
                         </x-tables.td>
                         <x-tables.td>
                             <a class="cursor-pointer text-red-500">
@@ -71,7 +95,7 @@
             <div class="mt-6">
                 <x-forms.input-label for="type" value="Tipo" />
 
-                <x-forms.select id="type" name="type" class="block mt-1 w-full sm:w-3/4"
+                <x-forms.select id="type" name="type" class="block mt-1 w-full sm:w-2/4"
                     wire:model="transaction.type" required>
                     <option value="">
                         Selecione uma opção
@@ -91,7 +115,7 @@
             <div class="mt-6">
                 <x-forms.input-label for="category" value="Categoria" />
 
-                <x-forms.select id="category" name="category" class="block mt-1 w-full sm:w-3/4"
+                <x-forms.select id="category" name="category" class="block mt-1 w-full sm:w-2/4"
                     wire:model="categoryId" required>
                     <option value="0">
                         Selecione uma opção
@@ -111,7 +135,7 @@
             <div class="mt-6">
                 <x-forms.input-label for="category_id" value="Sub-categoria" />
 
-                <x-forms.select id="category_id" name="category_id" class="block mt-1 w-full sm:w-3/4"
+                <x-forms.select id="category_id" name="category_id" class="block mt-1 w-full sm:w-2/4"
                     wire:model="transaction.category_id" required>
                     <option value="">
                         Selecione uma opção
@@ -137,7 +161,7 @@
 
 
                 <x-forms.currency-input wire:model.defer="transaction.amount" id="amount"
-                    class="block mt-1 w-full sm:w-3/4" type="text" name="amount" />
+                    class="block mt-1 w-full sm:w-2/4" type="text" name="amount" />
 
                 @error('transaction.amount')
                     <x-forms.input-error :messages="$message" class="mt-2" />
@@ -147,7 +171,7 @@
             <div class="mt-6">
                 <x-forms.input-label for="performed_at" value="Data da transação" />
 
-                <x-forms.datetime-input id="performed_at" class="block mt-1 w-full sm:w-3/4" type="text"
+                <x-forms.datetime-input id="performed_at" class="block mt-1 w-full sm:w-2/4" type="text"
                     name="performed_at" required wire:model.lazy="transaction.performed_at" />
 
                 @error('transaction.performed_at')
