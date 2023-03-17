@@ -22,11 +22,13 @@
                     <x-tables.td>
                         <div class="w-5 h-5 rounded-full" style="background: {{ $subCategory->color }}" />
                     </x-tables.td>
-                    <x-tables.td class="text-lg">
-                        <a class="cursor-pointer mr-4 text-blue-500" wire:click.prevent="openEditModal({{$subCategory}})">
+                    <x-tables.td class="whitespace-nowrap">
+                        <a class="cursor-pointer mr-4 text-blue-500"
+                            wire:click.prevent="openEditModal({{ $subCategory }})">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </a>
-                        <a class="cursor-pointer text-red-500" wire:click.prevent="openDeleteModal({{$subCategory}})">
+                        <a class="cursor-pointer text-red-500"
+                            wire:click.prevent="openDeleteModal({{ $subCategory }})">
                             <i class="fa-solid fa-xmark"></i>
                         </a>
                     </x-tables.td>
@@ -39,8 +41,9 @@
         {{ $subCategories->links() }}
     </div>
 
-    <x-modal name="edit-sub-category" focusable title="{{ $isEditMode ? 'Editar' : 'Adicionar'}} sub-categoria">
-        <form method="post" class="p-6" wire:submit.prevent="{{ $isEditMode ? 'updateSubCategory' : 'createSubCategory' }}">
+    <x-modal name="edit-sub-category" focusable title="{{ $isEditMode ? 'Editar' : 'Adicionar' }} sub-categoria">
+        <form method="post" class="p-6"
+            wire:submit.prevent="{{ $isEditMode ? 'updateSubCategory' : 'createSubCategory' }}">
             <div>
                 <x-forms.input-label for="edit-sub-category-name" value="Categoria" />
 
@@ -59,9 +62,9 @@
                     class="cursor-pointer w-[30px] h-[30px] sm:w-[40px] sm:h-[40px] outline-none" type="color"
                     required wire:model.defer="subCategory.color" />
 
-                    @error('subCategory.color')
-                        <x-forms.input-error :messages="$message" class="mt-2" />
-                    @enderror
+                @error('subCategory.color')
+                    <x-forms.input-error :messages="$message" class="mt-2" />
+                @enderror
             </div>
             <div class="mt-6">
                 <x-button type="submit">

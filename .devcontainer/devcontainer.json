@@ -1,26 +1,46 @@
 // https://aka.ms/devcontainer.json
 {
-	"name": "Existing Docker Compose (Extend)",
-	"dockerComposeFile": [
-		"../docker-compose.yml"
-	],
-	"service": "laravel.test",
-	"workspaceFolder": "/var/www/html",
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				// "mikestead.dotenv",
-				// "amiralizadeh9480.laravel-extra-intellisense",
-				// "ryannaddy.laravel-artisan",
-				// "onecentlin.laravel5-snippets",
-				// "onecentlin.laravel-blade"
-			],
-			"settings": {}
-		}
-	},
-	"remoteUser": "sail",
-	"postCreateCommand": "chown -R 1000:1000 /var/www/html"
-	// "forwardPorts": [],
-	// "runServices": [],
-	// "shutdownAction": "none",
+  "name": "Existing Docker Compose (Extend)",
+  "dockerComposeFile": [
+    "../docker-compose.yml"
+  ],
+  "service": "laravel.test",
+  "workspaceFolder": "/var/www/html",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "bradlc.vscode-tailwindcss",
+        "cierra.livewire-vscode",
+        "csstools.postcss",
+        "cweijan.vscode-mysql-client2",
+        "damianbal.vs-phpclassgen",
+        "dannyconnell.split-html-attributes",
+        "donjayamanne.githistory",
+        "eamodio.gitlens",
+        "lennardv.livewire-goto-updated",
+        "MehediDracula.php-namespace-resolver",
+        "mikestead.dotenv",
+        "ms-azuretools.vscode-docker",
+        "ms-vscode-remote.remote-containers",
+        "ms-vscode-remote.remote-wsl",
+        "ms-vscode.test-adapter-converter",
+        "naumovs.color-highlight",
+        "neilbrayfield.php-docblocker",
+        "onecentlin.laravel-blade",
+        "paulmolluzzo.convert-css-in-js",
+        "PKief.material-icon-theme",
+        "shufo.vscode-blade-formatter",
+        "xdebug.php-debug",
+        "yzhang.markdown-all-in-one",
+        "zhuangtongfa.material-theme"
+      ],
+      "settings": {}
+    }
+  },
+  "remoteUser": "sail",
+  "postCreateCommand": "chown -R 1000:1000 /var/www/html"
+  // "forwardPorts": [],
+  // "runServices": [],
+  // "shutdownAction": "none",
 }

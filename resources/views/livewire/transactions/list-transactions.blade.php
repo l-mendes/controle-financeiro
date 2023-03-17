@@ -32,6 +32,7 @@
             <x-slot name="thead">
                 <x-tables.th>Nome</x-tables.th>
                 <x-tables.th>Categoria</x-tables.th>
+                <x-tables.th>Sub-categoria</x-tables.th>
                 <x-tables.th>Data</x-tables.th>
                 <x-tables.th>Valor</x-tables.th>
                 <x-tables.th></x-tables.th>
@@ -43,13 +44,16 @@
                         <x-tables.td>
                             {{ $transaction->name }}
                         </x-tables.td>
-                        <x-tables.td>
+                        <x-tables.td class="whitespace-nowrap">
                             {{ $transaction->subCategory->category->name }}
                         </x-tables.td>
-                        <x-tables.td>
+                        <x-tables.td class="whitespace-nowrap">
+                            {{ $transaction->subCategory->name }}
+                        </x-tables.td>
+                        <x-tables.td class="whitespace-nowrap">
                             {{ $transaction->performed_at }}
                         </x-tables.td>
-                        <x-tables.td>
+                        <x-tables.td class="whitespace-nowrap">
                             <span class="text-[{{ $transaction->type->getTextColor() }}]">
                                 @if ($transaction->type->isInbound())
                                     + @money($transaction->amount)
@@ -58,8 +62,13 @@
                                 @endif
                             </span>
                         </x-tables.td>
-                        <x-tables.td>
-                            <a class="cursor-pointer text-red-500">
+                        <x-tables.td class="whitespace-nowrap">
+                            <a class="cursor-pointer text-blue-500 mr-2"
+                                wire:click.prevent="openEditModal({{ $transaction }})">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                            <a class="cursor-pointer text-red-500"
+                                wire:click.prevent="openDeleteModal({{ $transaction }})">
                                 <i class="fa-solid fa-xmark"></i>
                             </a>
                         </x-tables.td>
@@ -79,8 +88,8 @@
         </div>
     </x-card>
 
-    <x-modal name="add-transaction" focusable title="Adicionar transação">
-        <form method="post" class="p-6" wire:submit.prevent="create">
+    <x-modal name="add-transaction" focusable title="{{ $isEditMode ? 'Editar' : 'Adicionar' }} transação">
+        <form method="post" class="p-6" wire:submit.prevent={{ $isEditMode ? 'update' : 'create' }}>
             <div>
                 <x-forms.input-label for="name" value="Descrição" />
 
@@ -197,10 +206,10 @@
         </form>
     </x-modal>
 
-    <x-modal name="delete-category" focusable title="Remover categoria">
+    <x-modal name="delete-transaction" focusable title="Remover transação">
         <div class="p-6 flex gap-5 flex-col">
             <div>
-                <h3 class="text-gray-600 font-medium">Deseja realmente excluir a categoria?</h3>
+                <h3 class="text-gray-600 font-medium">Deseja realmente excluir a transação?</h3>
             </div>
 
             <div class="text-center">
