@@ -18,9 +18,9 @@
 @endphp
 <div class="flex items-center">
     <input id="{{ $id }}" type="checkbox" {{ $disabled ? 'disabled' : '' }} {!! $attributes->merge([
-        'class' => "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm $classes",
+        'class' => "cursor-pointer border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm $classes",
     ]) !!}>
-    <label for="{{ $id }}" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+    <label for="{{ $id }}" class="cursor-pointer ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
         {{ $label }}
     </label>
 </div>

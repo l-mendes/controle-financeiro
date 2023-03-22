@@ -10,7 +10,7 @@
 
                 <x-forms.text-input wire:model.defer="endDate" id="endDate" type="date" name="endDate" required />
 
-                <x-button icon="fa-solid fa-magnifying-glass" wire:click.prevent="applyFilter">
+                <x-button icon="fa-solid fa-magnifying-glass" class="hidden sm:block" wire:click.prevent="applyFilter">
                     Buscar
                 </x-button>
             </div>
@@ -22,6 +22,20 @@
             @error('endDate')
                 <x-forms.input-error :messages="$message" class="mt-2" />
             @enderror
+
+            <div class="mt-4">
+                <x-forms.checkbox-input id="is-done" name="is-done" wire:model.defer="isDone"
+                    label="Somente transações concluídas?" />
+            </div>
+
+            @error('isDone')
+                <x-forms.input-error :messages="$message" class="mt-2" />
+            @enderror
+
+            <x-button icon="fa-solid fa-magnifying-glass" class="mt-4 sm:hidden w-full"
+                wire:click.prevent="applyFilter">
+                Buscar
+            </x-button>
         </div>
 
         <x-button icon="fa-solid fa-plus" wire:click.prevent="openAddModal" class="mb-2">
@@ -63,6 +77,17 @@
                             </span>
                         </x-tables.td>
                         <x-tables.td class="whitespace-nowrap">
+                            @if (!$transaction->done)
+                                <a class="cursor-pointer text-green-500 mr-2" title="Marcar como concluída"
+                                    wire:click.prevent="markAsDone({{ $transaction }})">
+                                    <i class="fa-solid fa-check"></i>
+                                </a>
+                            @else
+                                <a class="cursor-pointer text-yellow-500 mr-2" title="Marcar como não concluída"
+                                    wire:click.prevent="markAsUndone({{ $transaction }})">
+                                    <i class="fa-sharp fa-solid fa-rotate-left"></i>
+                                </a>
+                            @endif
                             <a class="cursor-pointer text-blue-500 mr-2"
                                 wire:click.prevent="openEditModal({{ $transaction }})">
                                 <i class="fa-solid fa-pen-to-square"></i>

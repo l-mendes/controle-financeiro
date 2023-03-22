@@ -35,6 +35,8 @@ class ListTransactions extends Component
 
     public $endDate;
 
+    public bool $isDone = false;
+
     public Transaction $currentTransaction;
 
     public function mount()
@@ -67,7 +69,6 @@ class ListTransactions extends Component
 
         return view('livewire.transactions.list-transactions', [
             'transactions' => Transaction::with(['subCategory.category'])
-                ->done()
                 ->whereBetween(
                     DB::raw("DATE(CONVERT_TZ(performed_at, 'UTC', '$timezone'))"),
                     [
@@ -75,6 +76,9 @@ class ListTransactions extends Component
                         $this->endDate
                     ]
                 )
+                ->when($this->isDone, function ($q) {
+                    return $q->done();
+                })
                 ->orderByDesc('performed_at')
                 ->paginate()
         ]);
@@ -84,10 +88,12 @@ class ListTransactions extends Component
     {
         $validator = Validator::make([
             'startDate' => $this->startDate,
-            'endDate' => $this->endDate
+            'endDate' => $this->endDate,
+            'isDone' => $this->isDone
         ], [
             'startDate' => 'required|date|before:endDate',
-            'endDate' => 'required|date|after:startDate'
+            'endDate' => 'required|date|after:startDate',
+            'isDone' => 'required|boolean'
         ]);
 
         $validator->validate();
@@ -233,6 +239,22 @@ class ListTransactions extends Component
             $this->dispatchBrowserEvent('close-modal', 'delete-transaction');
 
             $this->dispatchBrowserEvent('alert', ['type' => 'success', 'message' => 'Transação excluída com sucesso!']);
+        }
+    }
+
+    public function markAsDone(Transaction $transaction): void
+    {
+        if (!$transaction->done) {
+            $transaction->done = true;
+            $transaction->save();
+        }
+    }
+
+    public function markAsUndone(Transaction $transaction): void
+    {
+        if ($transaction->done) {
+            $transaction->done = false;
+            $transaction->save();
         }
     }
 
