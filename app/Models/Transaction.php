@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class Transaction extends Model
 {
@@ -38,5 +40,26 @@ class Transaction extends Model
     public function scopeDone(Builder $builder): Builder
     {
         return $builder->where('done', true);
+    }
+
+    public function scopeBetweenDates(Builder $builder, Carbon $startDate, Carbon $endDate, string $timezone): Builder
+    {
+        return $builder->whereBetween(
+            DB::raw("CONVERT_TZ(performed_at, 'UTC', '$timezone')"),
+            [
+                $startDate->toDateTimeString(),
+                $endDate->toDateTimeString()
+            ]
+        );
+    }
+
+    public function scopeInbound(Builder $builder): Builder
+    {
+        return $builder->where('type', Type::INBOUND->value);
+    }
+
+    public function scopeOutbound(Builder $builder): Builder
+    {
+        return $builder->where('type', Type::OUTBOUND->value);
     }
 }
