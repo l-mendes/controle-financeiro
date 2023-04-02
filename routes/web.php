@@ -26,14 +26,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::resource('transactions', TransactionController::class)->only(['index']);
 
-    Route::get('/inbound', function () {
-        return view('dashboard');
-    })->name('inbound');
-
-    Route::get('/outbound', function () {
-        return view('dashboard');
-    })->name('outbound');
-
     Route::resource('categories', CategoryController::class)->only(['index', 'show', 'update']);
 });
 Route::get('/dashboard', function () {
