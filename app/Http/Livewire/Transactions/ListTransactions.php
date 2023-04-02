@@ -37,6 +37,8 @@ class ListTransactions extends Component
 
     public bool $isDone = false;
 
+    public string $type = '';
+
     public Transaction $currentTransaction;
 
     public function mount()
@@ -78,6 +80,9 @@ class ListTransactions extends Component
                 )
                 ->when($this->isDone, function ($q) {
                     return $q->done();
+                })
+                ->when($this->type !== '', function ($q) {
+                    return $q->where('type', $this->type);
                 })
                 ->orderByDesc('performed_at')
                 ->paginate()

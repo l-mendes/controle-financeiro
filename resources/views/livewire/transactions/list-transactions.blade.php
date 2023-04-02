@@ -24,6 +24,25 @@
             @enderror
 
             <div class="mt-4">
+                <label for="typeFilter" class="block">Tipo:</label>
+
+                <x-forms.select id="typeFilter" name="typeFilter" wire:model.defer="type" class="w-full lg:w-[150px]">
+                    <option value="">
+                        Todos
+                    </option>
+                    @foreach ($types as $type)
+                        <option value="{{ $type->value }}">
+                            {{ $type->getLabelText() }}
+                        </option>
+                    @endforeach
+                </x-forms.select>
+            </div>
+
+            @error('type')
+                <x-forms.input-error :messages="$message" class="mt-2" />
+            @enderror
+
+            <div class="mt-4">
                 <x-forms.checkbox-input id="is-done" name="is-done" wire:model.defer="isDone"
                     label="Somente transações concluídas?" />
             </div>
