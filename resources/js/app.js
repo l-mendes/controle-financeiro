@@ -2,6 +2,7 @@ import './bootstrap';
 import Alpine from 'alpinejs';
 import toastr from 'toastr';
 import Inputmask from 'inputmask';
+import './customCharts';
 
 window.Alpine = Alpine;
 
