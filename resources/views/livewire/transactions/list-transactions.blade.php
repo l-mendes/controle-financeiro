@@ -9,10 +9,6 @@
                 <span class="text-sm text-center">até</span>
 
                 <x-forms.text-input wire:model.defer="endDate" id="endDate" type="date" name="endDate" required />
-
-                <x-button icon="fa-solid fa-magnifying-glass" class="hidden sm:block" wire:click.prevent="applyFilter">
-                    Buscar
-                </x-button>
             </div>
 
             @error('startDate')
@@ -26,7 +22,7 @@
             <div class="mt-4">
                 <label for="typeFilter" class="block">Tipo:</label>
 
-                <x-forms.select id="typeFilter" name="typeFilter" wire:model.defer="type" class="w-full lg:w-[150px]">
+                <x-forms.select id="typeFilter" name="typeFilter" wire:model.defer="type" class="w-full sm:w-[200px]">
                     <option value="">
                         Todos
                     </option>
@@ -51,7 +47,7 @@
                 <x-forms.input-error :messages="$message" class="mt-2" />
             @enderror
 
-            <x-button icon="fa-solid fa-magnifying-glass" class="mt-4 sm:hidden w-full"
+            <x-button icon="fa-solid fa-magnifying-glass" class="mt-4 w-full sm:w-auto"
                 wire:click.prevent="applyFilter">
                 Buscar
             </x-button>
