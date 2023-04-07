@@ -91,14 +91,18 @@ class ListTransactions extends Component
 
     public function applyFilter()
     {
+        $this->resetValidation(['startDate', 'endDate', 'isDone', 'type']);
+
         $validator = Validator::make([
             'startDate' => $this->startDate,
             'endDate' => $this->endDate,
-            'isDone' => $this->isDone
+            'isDone' => $this->isDone,
+            'type' => $this->type
         ], [
             'startDate' => 'required|date|before:endDate',
             'endDate' => 'required|date|after:startDate',
-            'isDone' => 'required|boolean'
+            'isDone' => 'required|boolean',
+            'type' => ['nullable', new ValidTypeRule],
         ]);
 
         $validator->validate();
