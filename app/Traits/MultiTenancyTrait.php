@@ -14,7 +14,7 @@ trait MultiTenancyTrait
             });
 
             static::addGlobalScope('created_by_user_id', function (Builder $builder) {
-                $builder->where('user_id', auth()->user()->id);
+                $builder->where($builder->qualifyColumn('user_id'), auth()->user()->id);
             });
         }
     }

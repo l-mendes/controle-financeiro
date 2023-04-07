@@ -55,11 +55,11 @@ class Transaction extends Model
 
     public function scopeInbound(Builder $builder): Builder
     {
-        return $builder->where('type', Type::INBOUND);
+        return $builder->where($builder->qualifyColumn('type'), Type::INBOUND);
     }
 
     public function scopeOutbound(Builder $builder): Builder
     {
-        return $builder->where('type', Type::OUTBOUND);
+        return $builder->where($builder->qualifyColumn('type'), Type::OUTBOUND);
     }
 }
