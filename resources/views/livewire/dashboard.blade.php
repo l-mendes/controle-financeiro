@@ -55,5 +55,28 @@
             </div>
         </div>
 
+        <div class="px-1 w-full md:w-1/2 lg:px-2">
+            <div class="py-2 px-3 shadow-sm rounded-md bg-white border-gray-300 border">
+                <h1 class="text-gray-600 font-semibold">
+                    Despesas por Categoria
+                </h1>
+                <div class="h-[320px] w-full">
+                    <livewire:charts.livewire-currency-donut-chart
+                        key="{{ $expensesByCategoryPieChart->reactiveKey() }}" :pie-chart-model="$expensesByCategoryPieChart" />
+                </div>
+            </div>
+        </div>
+
+        <div class="px-1 w-full md:w-1/2 lg:px-2">
+            <div class="py-2 px-3 shadow-sm rounded-md bg-white border-gray-300 border">
+                <h1 class="text-gray-600 font-semibold">
+                    Despesas por Sub-categoria
+                </h1>
+                <div class="h-[320px] w-full">
+                    <livewire:charts.livewire-currency-donut-chart
+                        key="{{ $expensesByCategoryPieChart->reactiveKey() }}" :pie-chart-model="$expensesBySubCategoryPieChart" />
+                </div>
+            </div>
+        </div>
     </div>
 </div>
