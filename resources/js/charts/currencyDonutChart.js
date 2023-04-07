@@ -92,7 +92,7 @@ const currencyDonutChart = () => {
                 },
                 value: {
                   show: true,
-                  offsetY: 16,
+                  offsetY: 10,
                   formatter: function (val) {
                     return new Intl.NumberFormat('pt-BR', {
                       style: 'currency',
