@@ -295,6 +295,8 @@ class ListTransactions extends Component
 
     private function resetTransactionData()
     {
+        $this->categoryId = 0;
+
         $this->transaction = [
             'name' => '',
             'type' => '',
