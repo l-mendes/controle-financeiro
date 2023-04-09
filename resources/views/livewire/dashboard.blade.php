@@ -78,5 +78,62 @@
                 </div>
             </div>
         </div>
+
+        <div class="px-1 lg:px-2 w-full">
+            <div class="py-2 px-3 shadow-sm rounded-md bg-white border-gray-300 border flex flex-col gap-3">
+                <h1 class="text-gray-600 font-semibold">
+                    Últimas transações
+                </h1>
+                <x-tables.table>
+                    <x-slot name="thead">
+                        <x-tables.th class="text-xs sm:text-sm">Nome</x-tables.th>
+                        <x-tables.th class="hidden sm:block text-xs sm:text-sm">Categoria</x-tables.th>
+                        <x-tables.th class="hidden sm:block text-xs sm:text-sm">Sub-categoria</x-tables.th>
+                        <x-tables.th class="text-xs sm:text-sm">Data</x-tables.th>
+                        <x-tables.th class="text-xs sm:text-sm">Valor</x-tables.th>
+                    </x-slot>
+
+                    <x-slot name="tbody">
+                        @forelse ($transactions as $transaction)
+                            <x-tables.tr class="text-xs sm:text-sm">
+                                <x-tables.td>
+                                    {{ $transaction->name }}
+                                </x-tables.td>
+                                <x-tables.td class="hidden sm:block whitespace-nowrap">
+                                    {{ $transaction->subCategory->category->name }}
+                                </x-tables.td>
+                                <x-tables.td class="hidden sm:block whitespace-nowrap">
+                                    {{ $transaction->subCategory->name }}
+                                </x-tables.td>
+                                <x-tables.td class="whitespace-nowrap">
+                                    {{ $transaction->performed_at }}
+                                </x-tables.td>
+                                <x-tables.td class="whitespace-nowrap">
+                                    <span class="text-[{{ $transaction->type->getTextColor() }}]">
+                                        @if ($transaction->type->isInbound())
+                                            + @money($transaction->amount)
+                                        @else
+                                            - @money($transaction->amount)
+                                        @endif
+                                    </span>
+                                </x-tables.td>
+                            </x-tables.tr>
+                        @empty
+                            <x-tables.tr>
+                                <x-tables.td colspan="5" class="text-center text-gray-5 00">
+                                    <span>Nenhuma transação encontrada.</span>
+                                </x-tables.td>
+                            </x-tables.tr>
+                        @endforelse
+                    </x-slot>
+                </x-tables.table>
+
+                <div class="self-center">
+                    <x-link href="{{ route('transactions.index') }}" icon="fa-solid fa-plus">
+                        Ver mais
+                    </x-link>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

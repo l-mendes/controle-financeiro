@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Enums\Type;
 use App\Models\Transaction;
 use Asantibanez\LivewireCharts\Models\PieChartModel;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -65,13 +66,16 @@ class Dashboard extends Component
 
         $expensesBySubCategoryPieChart = $this->getExpensesBySubCategoryPieChart();
 
+        $transactions = $this->getLatestTransactions();
+
         return view('livewire.dashboard', compact(
             'inboundAmount',
             'outboundAmount',
             'balance',
             'wallet',
             'expensesByCategoryPieChart',
-            'expensesBySubCategoryPieChart'
+            'expensesBySubCategoryPieChart',
+            'transactions'
         ));
     }
 
@@ -128,5 +132,14 @@ class Dashboard extends Component
         }
 
         return $pieChart;
+    }
+
+    protected function getLatestTransactions(): Collection
+    {
+        return Transaction::done()
+            ->with(['subCategory.category'])
+            ->latest('performed_at')
+            ->limit(10)
+            ->get();
     }
 }
