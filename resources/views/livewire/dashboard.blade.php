@@ -87,8 +87,8 @@
                 <x-tables.table>
                     <x-slot name="thead">
                         <x-tables.th class="text-xs sm:text-sm">Nome</x-tables.th>
-                        <x-tables.th class="hidden sm:block text-xs sm:text-sm">Categoria</x-tables.th>
-                        <x-tables.th class="hidden sm:block text-xs sm:text-sm">Sub-categoria</x-tables.th>
+                        <x-tables.th class="hidden sm:table-cell text-xs sm:text-sm">Categoria</x-tables.th>
+                        <x-tables.th class="hidden sm:table-cell text-xs sm:text-sm">Sub-categoria</x-tables.th>
                         <x-tables.th class="text-xs sm:text-sm">Data</x-tables.th>
                         <x-tables.th class="text-xs sm:text-sm">Valor</x-tables.th>
                     </x-slot>
@@ -99,10 +99,10 @@
                                 <x-tables.td>
                                     {{ $transaction->name }}
                                 </x-tables.td>
-                                <x-tables.td class="hidden sm:block whitespace-nowrap">
+                                <x-tables.td class="hidden sm:table-cell whitespace-nowrap">
                                     {{ $transaction->subCategory->category->name }}
                                 </x-tables.td>
-                                <x-tables.td class="hidden sm:block whitespace-nowrap">
+                                <x-tables.td class="hidden sm:table-cell whitespace-nowrap">
                                     {{ $transaction->subCategory->name }}
                                 </x-tables.td>
                                 <x-tables.td class="whitespace-nowrap">
