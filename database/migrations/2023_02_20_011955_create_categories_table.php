@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->nullable()->constrained();
+            $table->unsignedBigInteger('category_id')->nullable();
             $table->string('name');
             $table->enum('type', ['I', 'O'])->nullable();
             $table->string('color');
-            $table->foreignId('user_id')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
             $table->softDeletes();
         });

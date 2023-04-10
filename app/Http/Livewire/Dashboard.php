@@ -58,7 +58,7 @@ class Dashboard extends Component
                 )
             )
             ->first()
-            ->balance;
+            ?->balance ?? 0;
 
         $balance = $inboundAmount - $outboundAmount;
 
