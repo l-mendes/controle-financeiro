@@ -58,12 +58,4 @@ class CategoryController extends Controller
 
         return redirect()->back()->with('success', 'Categoria atualizada com sucesso!');
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Category $category): RedirectResponse
-    {
-        //
-    }
 }
