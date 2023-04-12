@@ -3,12 +3,14 @@
         <div class="shadow-lg rounded-lg mb-6 border-2 border-gray-200 p-4">
             <h1>Período:</h1>
 
-            <div class="mt-1 w-full lg:w-3/4 flex gap-2 gap-y-3 sm:items-center flex-col sm:flex-row">
-                <x-forms.text-input wire:model.defer="startDate" id="startDate" type="date" name="startDate" required />
+            <div class="mt-1 w-full flex flex-col sm:flex-row sm:items-center gap-2 gap-y-3">
+                <x-forms.text-input wire:model.defer="startDate" id="startDate" type="date" name="startDate"
+                    class="w-full sm:w-auto" required />
 
                 <span class="text-sm text-center">até</span>
 
-                <x-forms.text-input wire:model.defer="endDate" id="endDate" type="date" name="endDate" required />
+                <x-forms.text-input wire:model.defer="endDate" id="endDate" type="date" name="endDate"
+                    class="w-full sm:w-auto" required />
             </div>
 
             @error('startDate')
