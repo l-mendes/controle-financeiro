@@ -4,12 +4,12 @@
             <h1>Período:</h1>
 
             <div class="mt-1 w-full flex flex-col sm:flex-row sm:items-center gap-2 gap-y-3">
-                <x-forms.text-input wire:model.defer="startDate" id="startDate" type="date" name="startDate"
+                <x-forms.text-input wire:model="startDate" id="startDate" type="date" name="startDate"
                     class="w-full sm:w-auto" required />
 
                 <span class="text-sm text-center">até</span>
 
-                <x-forms.text-input wire:model.defer="endDate" id="endDate" type="date" name="endDate"
+                <x-forms.text-input wire:model="endDate" id="endDate" type="date" name="endDate"
                     class="w-full sm:w-auto" required />
             </div>
 
@@ -24,7 +24,7 @@
             <div class="mt-4">
                 <label for="typeFilter" class="block">Tipo:</label>
 
-                <x-forms.select id="typeFilter" name="typeFilter" wire:model.defer="type" class="w-full sm:w-[200px]">
+                <x-forms.select id="typeFilter" name="typeFilter" wire:model="type" class="w-full sm:w-[200px]">
                     <option value="">
                         Todos
                     </option>
@@ -41,7 +41,7 @@
             @enderror
 
             <div class="mt-4">
-                <x-forms.checkbox-input id="is-done" name="is-done" wire:model.defer="isDone"
+                <x-forms.checkbox-input id="is-done" name="is-done" wire:model="isDone"
                     label="Somente transações concluídas?" />
             </div>
 
@@ -131,12 +131,12 @@
     </x-card>
 
     <x-modal name="add-transaction" focusable title="{{ $isEditMode ? 'Editar' : 'Adicionar' }} transação">
-        <form method="post" class="p-6" wire:submit.prevent={{ $isEditMode ? 'update' : 'create' }}>
+        <form method="post" class="p-6" wire:submit={{ $isEditMode ? 'update' : 'create' }}>
             <div>
                 <x-forms.input-label for="name" value="Descrição" />
 
                 <x-forms.text-input id="name" class="block mt-1 w-full sm:w-3/4" type="text" name="name"
-                    required wire:model.defer="transaction.name" />
+                    required wire:model="transaction.name" />
 
                 @error('transaction.name')
                     <x-forms.input-error :messages="$message" class="mt-2" />
@@ -147,7 +147,7 @@
                 <x-forms.input-label for="type" value="Tipo" />
 
                 <x-forms.select id="type" name="type" class="block mt-1 w-full sm:w-2/4"
-                    wire:model="transaction.type" required>
+                    wire:model.live="transaction.type" required>
                     <option value="">
                         Selecione uma opção
                     </option>
@@ -167,7 +167,7 @@
                 <x-forms.input-label for="category" value="Categoria" />
 
                 <x-forms.select id="category" name="category" class="block mt-1 w-full sm:w-2/4"
-                    wire:model="categoryId" required>
+                    wire:model.live="categoryId" required>
                     <option value="0">
                         Selecione uma opção
                     </option>
@@ -187,7 +187,7 @@
                 <x-forms.input-label for="category_id" value="Sub-categoria" />
 
                 <x-forms.select id="category_id" name="category_id" class="block mt-1 w-full sm:w-2/4"
-                    wire:model="transaction.category_id" required>
+                    wire:model.live="transaction.category_id" required>
                     <option value="">
                         Selecione uma opção
                     </option>
@@ -211,7 +211,7 @@
                 <x-forms.input-label for="amount" value="Valor" />
 
 
-                <x-forms.currency-input wire:model.defer="transaction.amount" id="amount"
+                <x-forms.currency-input wire:model="transaction.amount" id="amount"
                     class="block mt-1 w-full sm:w-2/4" type="text" name="amount" />
 
                 @error('transaction.amount')
@@ -223,7 +223,7 @@
                 <x-forms.input-label for="performed_at" value="Data da transação" />
 
                 <x-forms.datetime-input id="performed_at" class="block mt-1 w-full sm:w-2/4" type="text"
-                    name="performed_at" required wire:model.lazy="transaction.performed_at" />
+                    name="performed_at" required wire:model.blur="transaction.performed_at" />
 
                 @error('transaction.performed_at')
                     <x-forms.input-error :messages="$message" class="mt-2" />
@@ -232,7 +232,7 @@
 
             <div class="mt-6">
 
-                <x-forms.checkbox-input id="done" name="done" wire:model="transaction.done"
+                <x-forms.checkbox-input id="done" name="done" wire:model.live="transaction.done"
                     label="Transação concluída?" />
 
                 @error('transaction.done')
