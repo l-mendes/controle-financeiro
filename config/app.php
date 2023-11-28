@@ -82,7 +82,7 @@ return [
     |
     */
 
-    'locale' => 'pt-BR',
+    'locale' => 'pt_BR',
     'currency' => env('APP_CURRENCY', 'BRL'),
 
     /*
