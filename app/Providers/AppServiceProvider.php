@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Enums\Type;
+use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -28,5 +29,9 @@ class AppServiceProvider extends ServiceProvider
         View::share('types', Type::cases());
 
         Carbon::setLocale(config('app.locale'));
+
+        FilamentIcon::register([
+            'actions::delete-action' => 'heroicon-s-x-mark',
+        ]);
     }
 }
