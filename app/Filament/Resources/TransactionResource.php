@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Enums\Type;
 use App\Filament\Resources\TransactionResource\Pages;
-use App\Filament\Resources\TransactionResource\RelationManagers;
 use App\Models\Category;
 use App\Models\Transaction;
 use Filament\Forms;
@@ -19,8 +18,9 @@ use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Indicator;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class TransactionResource extends Resource
 {
@@ -36,8 +36,106 @@ class TransactionResource extends Resource
     {
         return $form
             ->schema([
-                //
-            ]);
+                Forms\Components\TextInput::make('name')
+                    ->label('Descrição')
+                    ->required()
+                    ->minLength(3)
+                    ->maxLength(255)
+                    ->autofocus(),
+
+                Forms\Components\Select::make('type')
+                    ->label('Tipo')
+                    ->options(Type::class)
+                    ->native(false)
+                    ->live()
+                    ->afterStateUpdated(function (Set $set) {
+                        $set('main_category_id', null);
+                        $set('category_id', null);
+                    })
+                    ->required(),
+
+                Forms\Components\Select::make('main_category_id')
+                    ->label('Categoria')
+                    ->options(fn (Get $get) => match ($get('type')) {
+                        Type::INBOUND->value => Category::query()
+                            ->mainCategory()
+                            ->inbound()
+                            ->pluck('name', 'id'),
+
+                        Type::OUTBOUND->value => Category::query()
+                            ->mainCategory()
+                            ->outbound()
+                            ->pluck('name', 'id'),
+                        default => [],
+                    })
+                    ->getOptionLabelUsing(fn ($value): ?string => Category::find($value)?->name)
+                    ->native(false)
+                    ->live()
+                    ->afterStateUpdated(fn (Set $set) => $set('category_id', null))
+                    ->required(),
+
+                Forms\Components\Select::make('category_id')
+                    ->label('Categoria')
+                    ->options(function (Get $get) {
+                        return Category::query()
+                            ->subCategory()
+                            ->where('category_id', $get('main_category_id'))
+                            ->pluck('name', 'id')
+                            ->toArray();
+                    })
+                    ->getOptionLabelUsing(fn ($value): ?string => Category::find($value)?->name)
+                    ->native(false)
+                    ->required()
+                    ->live(),
+
+                Forms\Components\DateTimePicker::make('performed_at')
+                    ->label('Data da transação')
+                    ->default(now()->setTimezone('America/Sao_Paulo')->toDateTimeString())
+                    ->seconds(false)
+                    ->required(),
+
+                Forms\Components\TextInput::make('amount')
+                    ->label('Valor')
+                    ->extraAlpineAttributes([
+                        'x-on:keypress' => 'function() {
+                                var charCode = event.keyCode || event.which;
+                                if (charCode < 48 || charCode > 57) {
+                                    event.preventDefault();
+                                    return false;
+                                }
+                                return true;
+                            }',
+
+                        'x-on:keyup' => 'function() {
+                                var money = $el.value.replace(/\D/g, "");
+                                money = (money / 100).toFixed(2) + "";
+                                money = money.replace(".", ",");
+                                money = money.replace(/(\d)(\d{3})(\d{3}),/g, "$1.$2.$3,");
+                                money = money.replace(/(\d)(\d{3}),/g, "$1.$2,");
+                                
+                                $el.value = money;
+                            }',
+                    ])
+                    ->dehydrateStateUsing(
+                        fn ($state): ?int => $state ?
+                            Str::of($state)
+                            ->replace('.', '')
+                            ->replace(',', '')
+                            ->toInteger()
+                            : null
+                    )
+                    ->default(0.00)
+                    ->formatStateUsing(fn ($state) => $state ? number_format(($state / 100), 2, ',', '.') : 0.00)
+                    ->prefix('R$')
+                    ->required(),
+
+                Forms\Components\Checkbox::make('done')
+                    ->label('Transação concluída?')
+                    ->default(true)
+                    ->inline()
+
+            ])
+            ->columns(1);
     }
 
     public static function table(Table $table): Table
@@ -46,36 +144,44 @@ class TransactionResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nome')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('subCategory.category.name')
                     ->label('Categoria')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('subCategory.name')
                     ->label('Sub-categoria')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('performed_at')
                     ->label('Data')
-                    ->dateTime('d/m/Y H:i'),
+                    ->dateTime('d/m/Y H:i')
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('amount')
                     ->label('Valor')
                     ->money(currency: 'BRL', divideBy: 100)
                     ->prefix(fn (Transaction $record) => $record->type->isInbound() ? '+' : '-')
                     ->color(fn (Transaction $record) => $record->type->getColor())
+                    ->sortable()
             ])
+            ->paginated([10, 25, 50, 100])
+            ->deferLoading()
+            ->striped()
             ->filters([
                 Tables\Filters\Filter::make('performed_at')
                     ->form([
                         DatePicker::make('performed_from')
                             ->label('De')
-                            ->default(now()->startOfMonth()),
+                            ->default(now()->setTimezone('America/Sao_Paulo')->startOfMonth()->toDateTimeString()),
 
                         DatePicker::make('performed_until')
                             ->label('Até')
-                            ->default(now()),
+                            ->default(now()->setTimezone('America/Sao_Paulo')->toDateTimeString()),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
@@ -109,14 +215,7 @@ class TransactionResource extends Resource
                     ->form([
                         Select::make('type')
                             ->label('Tipo')
-                            ->options(function () {
-                                $types = [];
-                                foreach (Type::cases() as $type) {
-                                    $types[$type->value] = $type->getLabelText();
-                                }
-
-                                return $types;
-                            })
+                            ->options(Type::class)
                             ->afterStateUpdated(function (Set $set) {
                                 $set('category_id', null);
                             })
@@ -167,7 +266,20 @@ class TransactionResource extends Resource
                     ->action(fn (Transaction $record) => $record->update(['done' => !$record->done])),
 
                 Tables\Actions\EditAction::make()
-                    ->iconButton(),
+                    ->iconButton()
+                    ->mutateRecordDataUsing(function (array $data): array {
+                        $data['main_category_id'] = Category::query()
+                            ->mainCategory()
+                            ->whereHas('subCategories', function ($q) use ($data) {
+                                $q->where('id', $data['category_id']);
+                            })
+                            ->get()
+                            ->first()
+                            ?->id;
+
+                        return $data;
+                    })
+                    ->modalWidth('lg'),
 
                 Tables\Actions\DeleteAction::make()
                     ->iconButton(),
