@@ -90,7 +90,7 @@ class TransactionResource extends Resource
 
                 Forms\Components\DateTimePicker::make('performed_at')
                     ->label('Data da transação')
-                    ->default(now()->setTimezone('America/Sao_Paulo')->toDateTimeString())
+                    ->default(now()->setTimezone(auth()->user()->timezone)->toDateTimeString())
                     ->seconds(false)
                     ->required(),
 
@@ -159,7 +159,7 @@ class TransactionResource extends Resource
 
                 Tables\Columns\TextColumn::make('performed_at')
                     ->label('Data')
-                    ->dateTime('d/m/Y H:i')
+                    ->dateTime('d/m/Y H:i', auth()->user()->timezone)
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('amount')
@@ -175,36 +175,36 @@ class TransactionResource extends Resource
             ->filters([
                 Tables\Filters\Filter::make('performed_at')
                     ->form([
-                        DatePicker::make('performed_from')
+                        DatePicker::make('from')
                             ->label('De')
-                            ->default(now()->setTimezone('America/Sao_Paulo')->startOfMonth()->toDateTimeString()),
+                            ->default(now()->setTimezone(auth()->user()->timezone)->startOfMonth()->toDateTimeString()),
 
-                        DatePicker::make('performed_until')
+                        DatePicker::make('until')
                             ->label('Até')
-                            ->default(now()->setTimezone('America/Sao_Paulo')->toDateTimeString()),
+                            ->default(now()->setTimezone(auth()->user()->timezone)->toDateTimeString()),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
-                                $data['performed_from'],
+                                $data['from'],
                                 fn (Builder $query, $date): Builder => $query->whereDate('performed_at', '>=', $date),
                             )
                             ->when(
-                                $data['performed_until'],
+                                $data['until'],
                                 fn (Builder $query, $date): Builder => $query->whereDate('performed_at', '<=', $date),
                             );
                     })
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
 
-                        if ($data['performed_from'] ?? null) {
-                            $indicators[] = Indicator::make('De ' . Carbon::parse($data['performed_from'])->format('d/m/Y'))
-                                ->removeField('performed_from');
+                        if ($data['from'] ?? null) {
+                            $indicators[] = Indicator::make('De ' . Carbon::parse($data['from'])->format('d/m/Y'))
+                                ->removeField('from');
                         }
 
-                        if ($data['performed_until'] ?? null) {
-                            $indicators[] = Indicator::make('Até ' . Carbon::parse($data['performed_until'])->format('d/m/Y'))
-                                ->removeField('performed_until');
+                        if ($data['until'] ?? null) {
+                            $indicators[] = Indicator::make('Até ' . Carbon::parse($data['until'])->format('d/m/Y'))
+                                ->removeField('until');
                         }
 
                         return $indicators;

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Type;
 use App\Traits\MultiTenancyTrait;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -32,6 +33,14 @@ class Transaction extends Model
         'performed_at' => 'datetime',
     ];
 
+    protected function performedAt(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => Carbon::parse($value)->setTimezone(auth()->user()?->timezone ?? config('app.timezone')),
+            set: fn ($value) => Carbon::parse($value, auth()->user()?->timezone)->setTimezone(config('app.timezone'))
+        );
+    }
+
     public function subCategory(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id')->subCategory()->withTrashed();
@@ -44,8 +53,10 @@ class Transaction extends Model
 
     public function scopeBetweenDates(Builder $builder, Carbon $startDate, Carbon $endDate, string $timezone): Builder
     {
+        $appTimezone = config('app.timezone');
+
         return $builder->whereBetween(
-            DB::raw("CONVERT_TZ(performed_at, 'UTC', '$timezone')"),
+            DB::raw("CONVERT_TZ(performed_at, '$appTimezone', '$timezone')"),
             [
                 $startDate->toDateTimeString(),
                 $endDate->toDateTimeString()
