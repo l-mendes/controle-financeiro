@@ -158,7 +158,7 @@ class TransactionResource extends Resource
 
                 Tables\Columns\TextColumn::make('performed_at')
                     ->label('Data')
-                    ->dateTime('d/m/Y H:i', auth()->user()->timezone)
+                    ->dateTime('d/m/Y H:i')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('amount')
@@ -176,21 +176,20 @@ class TransactionResource extends Resource
                     ->form([
                         DatePicker::make('from')
                             ->label('De')
-                            ->default(now()->setTimezone(auth()->user()->timezone)->startOfMonth()->toDateTimeString()),
+                            ->default(now()->startOfMonth()->toDateString()),
 
                         DatePicker::make('until')
                             ->label('Até')
-                            ->default(now()->setTimezone(auth()->user()->timezone)->toDateTimeString()),
+                            ->default(now()->setTimezone(auth()->user()->timezone)->toDateString()),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
+                        return $query->when(
                                 $data['from'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('performed_at', '>=', $date),
+                                fn (Builder $query, $date): Builder => $query->fromDate($date, auth()->user()->timezone),
                             )
                             ->when(
                                 $data['until'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('performed_at', '<=', $date),
+                                fn (Builder $query, $date): Builder => $query->untilDate($date, auth()->user()->timezone),
                             );
                     })
                     ->indicateUsing(function (array $data): array {

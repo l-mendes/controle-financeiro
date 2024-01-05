@@ -13,6 +13,8 @@ class DashboardBalanceOverview extends BaseWidget
 {
     use InteractsWithPageFilters;
 
+    protected static ?string $pollingInterval = null;
+
     protected function getStats(): array
     {
         $inboundAmount = $this->getInboundAmount();
@@ -56,28 +58,19 @@ class DashboardBalanceOverview extends BaseWidget
 
     private function getInboundAmount(): int
     {
-        $appTimezone = config('app.timezone');
         $userTimezone = auth()->user()->timezone;
 
+        if (!data_get($this->filters, 'startDate') || !data_get($this->filters, 'endDate')) {
+            return 0;
+        }
+
         return Transaction::query()
-            ->when($this->filters['startDate'], function ($query) use ($appTimezone, $userTimezone) {
-                return $query->whereDate(
-                    DB::raw("CONVERT_TZ(performed_at, '$appTimezone', '$userTimezone')"),
-                    '>=',
-                    $this->filters['startDate']
-                );
-            })
-            ->when($this->filters['endDate'], function ($query) use ($appTimezone, $userTimezone) {
-                return $query->whereDate(
-                    DB::raw("CONVERT_TZ(performed_at, '$appTimezone', '$userTimezone')"),
-                    '<=',
-                    $this->filters['endDate']
-                );
-            })
-            ->when($this->filters['category_id'], function ($query) {
+            ->fromDate($this->filters['startDate'], $userTimezone)
+            ->untilDate($this->filters['endDate'], $userTimezone)
+            ->when(data_get($this->filters, 'category_id'), function ($query) {
                 return $query->whereIn('category_id', $this->filters['category_id']);
             })
-            ->when($this->filters['main_category_id'], function ($query) {
+            ->when(data_get($this->filters, 'main_category_id'), function ($query) {
                 return $query->whereHas('subCategory', function ($query) {
                     return $query->where('category_id', $this->filters['main_category_id']);
                 });
@@ -88,28 +81,19 @@ class DashboardBalanceOverview extends BaseWidget
 
     private function getOutboundAmount(): int
     {
-        $appTimezone = config('app.timezone');
         $userTimezone = auth()->user()->timezone;
 
+        if (!data_get($this->filters, 'startDate') || !data_get($this->filters, 'endDate')) {
+            return 0;
+        }
+
         return Transaction::query()
-            ->when($this->filters['startDate'], function ($query) use ($appTimezone, $userTimezone) {
-                return $query->whereDate(
-                    DB::raw("CONVERT_TZ(performed_at, '$appTimezone', '$userTimezone')"),
-                    '>=',
-                    $this->filters['startDate']
-                );
-            })
-            ->when($this->filters['endDate'], function ($query) use ($appTimezone, $userTimezone) {
-                return $query->whereDate(
-                    DB::raw("CONVERT_TZ(performed_at, '$appTimezone', '$userTimezone')"),
-                    '<=',
-                    $this->filters['endDate']
-                );
-            })
-            ->when($this->filters['category_id'], function ($query) {
+            ->fromDate($this->filters['startDate'], $userTimezone)
+            ->untilDate($this->filters['endDate'], $userTimezone)
+            ->when(data_get($this->filters, 'category_id'), function ($query) {
                 return $query->whereIn('category_id', $this->filters['category_id']);
             })
-            ->when($this->filters['main_category_id'], function ($query) {
+            ->when(data_get($this->filters, 'main_category_id'), function ($query) {
                 return $query->whereHas('subCategory', function ($query) {
                     return $query->where('category_id', $this->filters['main_category_id']);
                 });

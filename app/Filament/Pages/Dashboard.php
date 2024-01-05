@@ -16,6 +16,17 @@ class Dashboard extends \Filament\Pages\Dashboard
 {
     use HasFiltersAction;
 
+    public function mount(): void
+    {
+        if (!data_get($this->filters, 'startDate')) {
+            $this->filters['startDate'] = now()->setTimezone(auth()->user()->timezone)->startOfMonth()->toDateString();
+        }
+
+        if (!data_get($this->filters, 'endDate')) {
+            $this->filters['endDate'] = now()->setTimezone(auth()->user()->timezone)->toDateString();
+        }
+    }
+
     protected function getHeaderActions(): array
     {
         return [
@@ -25,7 +36,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                 ->form([
                     DatePicker::make('startDate')
                         ->label('Data inicial')
-                        ->default(now()->setTimezone(auth()->user()->timezone)->startOfMonth()->toDateString())
+                        ->default(now()->startOfMonth()->toDateString())
                         ->required(),
 
                     DatePicker::make('endDate')

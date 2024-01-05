@@ -36,7 +36,7 @@ class Transaction extends Model
     protected function performedAt(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => Carbon::parse($value)->setTimezone(auth()->user()?->timezone ?? config('app.timezone')),
+            get: fn ($value) => Carbon::parse($value)->setTimezone(auth()->user()?->timezone ?? config('app.timezone'))->toDateTimeString(),
             set: fn ($value) => Carbon::parse($value, auth()->user()?->timezone)->setTimezone(config('app.timezone'))
         );
     }
@@ -51,16 +51,25 @@ class Transaction extends Model
         return $builder->where('done', true);
     }
 
-    public function scopeBetweenDates(Builder $builder, Carbon $startDate, Carbon $endDate, string $timezone): Builder
+    public function scopeFromDate(Builder $builder, string $fromDate, string $timezone)
     {
         $appTimezone = config('app.timezone');
 
-        return $builder->whereBetween(
-            DB::raw("CONVERT_TZ(performed_at, '$appTimezone', '$timezone')"),
-            [
-                $startDate->toDateTimeString(),
-                $endDate->toDateTimeString()
-            ]
+        return $builder->where(
+            DB::raw("DATE(CONVERT_TZ(performed_at, '$appTimezone', '$timezone'))"),
+            '>=',
+            $fromDate
+        );
+    }
+
+    public function scopeUntilDate(Builder $builder, string $untilDate, string $timezone)
+    {
+        $appTimezone = config('app.timezone');
+
+        return $builder->where(
+            DB::raw("DATE(CONVERT_TZ(performed_at, '$appTimezone', '$timezone'))"),
+            '<=',
+            $untilDate
         );
     }
 

@@ -8,7 +8,6 @@ use Brick\Money\Money;
 use Filament\Widgets\Concerns\InteractsWithPageTable;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Illuminate\Support\Facades\DB;
 
 class BalanceOverview extends BaseWidget
 {
@@ -43,23 +42,14 @@ class BalanceOverview extends BaseWidget
 
     private function getInboundAmount(): int
     {
-        $appTimezone = config('app.timezone');
         $userTimezone = auth()->user()->timezone;
 
         return Transaction::query()
-            ->when($this->tableFilters['performed_at']['from'], function ($query) use ($appTimezone, $userTimezone) {
-                return $query->where(
-                    DB::raw("CONVERT_TZ(performed_at, '$appTimezone', '$userTimezone')"),
-                    '>=',
-                    $this->tableFilters['performed_at']['from']
-                );
+            ->when(data_get($this->tableFilters, 'performed_at.from'), function ($query) use ($userTimezone) {
+                return $query->fromDate($this->tableFilters['performed_at']['from'], $userTimezone);
             })
-            ->when($this->tableFilters['performed_at']['until'], function ($query) use ($appTimezone, $userTimezone) {
-                return $query->where(
-                    DB::raw("CONVERT_TZ(performed_at, '$appTimezone', '$userTimezone')"),
-                    '<=',
-                    $this->tableFilters['performed_at']['until']
-                );
+            ->when(data_get($this->tableFilters, 'performed_at.until'), function ($query) use ($userTimezone) {
+                return $query->untilDate($this->tableFilters['performed_at']['until'], $userTimezone);
             })
             ->when($this->tableFilters['category']['category_id'], function ($query) {
                 return $query->where('category_id', $this->tableFilters['category']['category_id']);
@@ -73,23 +63,14 @@ class BalanceOverview extends BaseWidget
 
     private function getOutboundAmount(): int
     {
-        $appTimezone = config('app.timezone');
         $userTimezone = auth()->user()->timezone;
 
         return Transaction::query()
-            ->when($this->tableFilters['performed_at']['from'], function ($query) use ($appTimezone, $userTimezone) {
-                return $query->where(
-                    DB::raw("CONVERT_TZ(performed_at, '$appTimezone', '$userTimezone')"),
-                    '>=',
-                    $this->tableFilters['performed_at']['from']
-                );
+            ->when(data_get($this->tableFilters, 'performed_at.from'), function ($query) use ($userTimezone) {
+                return $query->fromDate($this->tableFilters['performed_at']['from'], $userTimezone);
             })
-            ->when($this->tableFilters['performed_at']['until'], function ($query) use ($appTimezone, $userTimezone) {
-                return $query->where(
-                    DB::raw("CONVERT_TZ(performed_at, '$appTimezone', '$userTimezone')"),
-                    '<=',
-                    $this->tableFilters['performed_at']['until']
-                );
+            ->when(data_get($this->tableFilters, 'performed_at.until'), function ($query) use ($userTimezone) {
+                return $query->untilDate($this->tableFilters['performed_at']['until'], $userTimezone);
             })
             ->when($this->tableFilters['category']['category_id'], function ($query) {
                 return $query->where('category_id', $this->tableFilters['category']['category_id']);
