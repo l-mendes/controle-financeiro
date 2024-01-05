@@ -168,6 +168,7 @@ class TransactionResource extends Resource
                     ->color(fn (Transaction $record) => $record->type->getColor())
                     ->sortable()
             ])
+            ->defaultSort('performed_at', 'desc')
             ->paginated([10, 25, 50, 100])
             ->deferLoading()
             ->striped()
