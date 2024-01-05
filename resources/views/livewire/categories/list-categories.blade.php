@@ -50,12 +50,12 @@
     </div>
 
     <x-modal name="add-category" focusable title="Adicionar categoria">
-        <form method="post" class="p-6" wire:submit.prevent="create">
+        <form method="post" class="p-6" wire:submit="create">
             <div>
                 <x-forms.input-label for="name" value="Categoria" />
 
                 <x-forms.text-input id="name" class="block mt-1 w-full sm:w-3/4" type="text"
-                    name="name" required wire:model.defer="category.name" />
+                    name="name" required wire:model="category.name" />
 
                 @error('category.name')
                     <x-forms.input-error :messages="$message" class="mt-2" />
@@ -67,7 +67,7 @@
 
                 <x-forms.text-input id="color" name="color"
                     class="cursor-pointer w-[30px] h-[30px] sm:w-[40px] sm:h-[40px] outline-none" type="color"
-                    required wire:model.defer="category.color" />
+                    required wire:model="category.color" />
 
                     @error('category.color')
                         <x-forms.input-error :messages="$message" class="mt-2" />
@@ -77,7 +77,7 @@
             <div class="mt-6">
                 <x-forms.input-label for="type" :value="'Tipo'" />
 
-                <x-forms.select id="type" name="type" class="block mt-1 w-full sm:w-3/4" wire:model.defer="category.type" required>
+                <x-forms.select id="type" name="type" class="block mt-1 w-full sm:w-3/4" wire:model="category.type" required>
                     @foreach ($types as $type)
                         <option value="{{ $type->value }}">
                             {{ $type->getLabelText() }}

@@ -55,4 +55,14 @@ class Category extends Model
     {
         return $query->where('category_id', $categoryId);
     }
+
+    public function scopeInbound(Builder $query): Builder
+    {
+        return $query->where('type', Type::INBOUND);
+    }
+
+    public function scopeOutbound(Builder $query): Builder
+    {
+        return $query->where('type', Type::OUTBOUND);
+    }
 }
